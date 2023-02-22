@@ -1,6 +1,13 @@
 <?php
+echo php_uname().'<br>';
+echo PHP_OS;
 
-require '/Users/mikhailleonov/vendor/autoload.php';
+if (strripos(php_uname(), 'MacBook'))
+$v_dir = '/Users/mikhailleonov';
+else
+$v_dir = '.';
+
+require $v_dir.'/vendor/autoload.php';
 
 use Aws\DynamoDb\DynamoDbClient;
 
