@@ -101,6 +101,28 @@ class DynamoDb
 		;
 	}
 
+	public function UpdatePassword($login, $newPassword)
+	{
+		$login_str = strval($login);
+		$password = password_hash($newPassword, PASSWORD_DEFAULT);
+		$this->ConnectDB();
+
+		$result = $this->client->updateItem(
+			array(
+				'TableName' => 'UsersData',
+				'Key' => array(
+					'Login' => array('S' => $login_str)
+				),
+				'UpdateExpression' => 'SET Password = :v',
+				'ExpressionAttributeValues' => array(
+					':v' => array('S' => $password)
+				)
+			)
+		);
+
+	}
+
+
 	public function CheckConfirmationToken($login, $token)
 	{
 		$this->ConnectDB();

@@ -60,4 +60,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$mail->SendEmail($email, $msg);
 
 	header('Location: /');
+	exit;
 }

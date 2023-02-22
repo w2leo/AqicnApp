@@ -1,36 +1,40 @@
 <?php
 
-if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
-  $email = $_SESSION['email'];
+require_once('db/validation.php');
+require_once('db/awsses.php');
 
-  $pass1= $_POST['pass1'] ?? '';
-  $pass2= $_POST['pass2'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+	$email = $_SESSION['email'];
+	$login = isset($_POST['login']) ? $_POST['login'] : "";
+	// $token = $_GET['recovery_token'];
 
-  $_SESSION['message'] = [];
+	$pass1 = $_POST['pass1'] ?? '';
+	$pass2 = $_POST['pass2'] ?? '';
 
-  if( !$pass1 || !$pass2 ) {
-    $_SESSION['message'][] = 'Задайте пароль и подтверждение';
-    header('Location: /');
-    exit;
-  }
-  if( $pass1 != $pass2 ) {
-    $_SESSION['message'][] = 'Укажите одинаковые пароли';
-    header('Location: /');
-    exit;
-  }
+	$pass1 = Validation::checkInput($_POST['pass1'] ?? '') ? $_POST['pass1'] ?? '' : '';
+	$pass2 = Validation::checkInput($_POST['pass2'] ?? '') ? $_POST['pass2'] ?? '' : '';
 
-  $stmt = mysqli_stmt_init($db);
-  if (mysqli_stmt_prepare($stmt, "UPDATE users SET pass=? WHERE email=?")) {
+	$_SESSION['message'] = [];
 
-    $pass = password_hash($pass1, PASSWORD_BCRYPT, ['cost' => 12,]);
-    mysqli_stmt_bind_param($stmt, "ss", $pass, $email);
-    mysqli_stmt_execute($stmt);
+	if (!$pass1 || !$pass2) {
+		$_SESSION['message'][] = 'Input password and confirm it';
+		header('Location: /');
+		exit;
+	}
+	if ($pass1 != $pass2) {
+		$_SESSION['message'][] = 'Passwords doesn\'t match';
+		header('Location: /');
+		exit;
+	}
 
-    $_SESSION['message'][] = 'Пароль изменён';
+	$db = new DynamoDb();
+	$db->UpdatePassword($login, $pass1);
 
-    header('Location: /');
-    exit;
-  }
+	$_SESSION['message'][] = 'Пароль изменён';
+
+	unset($_SESSION['recovery_token']);
+	header('Location: /');
+	exit;
 
 
 }
