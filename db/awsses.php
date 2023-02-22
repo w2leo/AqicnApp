@@ -2,7 +2,12 @@
 
 // If necessary, modify the path in the require statement below to refer to the
 // location of your Composer autoload.php file.
-require '/Users/mikhailleonov/vendor/autoload.php';
+if (strripos(php_uname(), 'MacBook'))
+$v_dir = '/Users/mikhailleonov';
+else
+$v_dir = '.';
+
+require $v_dir.'/vendor/autoload.php';
 
 use Aws\Ses\SesClient;
 use Aws\Exception\AwsException;
