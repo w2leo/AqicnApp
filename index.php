@@ -5,7 +5,7 @@ require_once('db/validation.php');
 //Connect DB class
 require_once "db/dynamoDB.php";
 
-//включаем буферизацию вывода
+//enable input bufferization
 ob_start();
 
 //стартуем сессию
