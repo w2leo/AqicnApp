@@ -12,19 +12,22 @@ ob_start();
 session_start();
 
 //check GET and POST requests
-if (isset($_GET))
-{
+if (isset($_GET)) {
+	$flagError = false;
 	foreach ($_GET as $key => $value) {
 		if (!Validation::checkInput($value)) {
 			unset($_GET[$key]);
-			header('Location: /');
-			exit;
+			$flagError = true;
+
 		}
+	}
+	if ($flagError) {
+		header('Location: /');
+		exit;
 	}
 }
 
-if (isset($_POST))
-{
+if (isset($_POST)) {
 	foreach ($_POST as $key => $value) {
 		$_GET[$key] = Validation::validate($value);
 	}
