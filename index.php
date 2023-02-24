@@ -23,6 +23,13 @@ if (isset($_GET))
 	}
 }
 
+if (isset($_POST))
+{
+	foreach ($_POST as $key => $value) {
+		$_GET[$key] = Validation::validate($value);
+	}
+}
+
 //отладочная информация
 echo "<pre>GET:", print_r($_GET), "</pre>";
 echo "<pre>POST:", print_r($_POST), "</pre>";
