@@ -13,9 +13,7 @@ class Validation {
 	static function checkInput($input): bool
 	{
 		$data = Validation::validate($input);
-		if ($input == '' || $data != $input)
-			return false;
-		return true;
+		return $input != '' && $data == $input;
 	}
 
 }
