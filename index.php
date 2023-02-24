@@ -1,14 +1,27 @@
 <?php
 // error_reporting(E_ERROR | E_PARSE);
 
+require_once('db/validation.php');
+//Connect DB class
+require_once "db/dynamoDB.php";
+
 //включаем буферизацию вывода
 ob_start();
 
 //стартуем сессию
 session_start();
 
-//подключаем базу
-include "db/dynamoDB.php";
+//check GET and POST requests
+if (isset($_GET))
+{
+	foreach ($_GET as $key => $value) {
+		if (!Validation::checkInput($value)) {
+			unset($_GET[$key]);
+			header('Location: /');
+			exit;
+		}
+	}
+}
 
 //отладочная информация
 echo "<pre>GET:", print_r($_GET), "</pre>";
