@@ -18,9 +18,10 @@ session_start();
 $testConnector = new testAws();
 $testConnector->ConnectSES();
 $testConnector->ConnectDb();
+$testConnector->SendEmail('robot@rfbuild.ru','Some message to client');
+var_dump($testConnector->GetUserData());
 
-
-
+/*
 //check GET and POST requests
 if (isset($_GET)) {
 	$flagError = false;
@@ -95,6 +96,7 @@ if (isset($_SESSION['username'])) {
 	include "handlers/signup.php";
 	include "views/signup.php";
 }
+*/
 ?>
 
 <link rel="preconnect" href="https://fonts.gstatic.com">
