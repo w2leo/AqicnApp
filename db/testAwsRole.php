@@ -9,6 +9,12 @@ else
 
 require $v_dir . '/vendor/autoload.php';
 
+use Aws\Ses\SesClient;
+use Aws\Exception\AwsException;
+use Aws\DynamoDb\DynamoDbClient;
+
+
+
 class testAws
 {
 
