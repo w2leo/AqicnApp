@@ -1,74 +1,58 @@
 <?php
 
-// Define the allowed methods for this API endpoint
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
-header("Content-Type: application/json; charset=UTF-8");
-
-// Get the HTTP method, path, and body of the request
-$method = $_SERVER['REQUEST_METHOD'];
-$request = explode('/', trim($_SERVER['PATH_INFO'], '/'));
-$input = json_decode(file_get_contents('php://input'), true);
-
-// Route the request to the appropriate function based on the HTTP method and path
-switch ($method) {
-	case 'GET':
-		handleGet($request);
-		break;
-	case 'POST':
-		handlePost($input);
-		break;
-	case 'PUT':
-		handlePut($request, $input);
-		break;
-	case 'DELETE':
-		handleDelete($request);
-		break;
-}
-
-// Function to handle a GET request
-function handleGet($request)
+class AqiCn
 {
-	// Return a JSON response with the requested data
-	echo json_encode(
-		array(
-			"message" => "Hello, World!"
-		)
-	);
-}
+	private $AQI_SERVER = 'https://api.waqi.info/feed';
+	private $AQI_TOKEN = 'a973c678b0ebd1463c7b762317ac13a6377550f9';
 
-// Function to handle a POST request
-function handlePost($input)
-{
-	// Return a JSON response with the posted data
-	echo json_encode(
-		array(
-			"message" => "Received POST request",
-			"data" => $input
-		)
-	);
-}
+	public function GetCityData($cityName)
+	{
+		$cityName = str_replace(' ', '%20', $cityName);
+		$requestUrl = $this->AQI_SERVER . '/' . $cityName . '/?token=' . $this->AQI_TOKEN;
+		$curl = curl_init();
 
-// Function to handle a PUT request
-function handlePut($request, $input)
-{
-	// Return a JSON response with the updated data
-	echo json_encode(
-		array(
-			"message" => "Received PUT request",
-			"data" => $input
-		)
-	);
-}
+		curl_setopt_array(
+			$curl,
+			array(
+				CURLOPT_URL => $requestUrl,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => 'GET',
+			)
+		);
 
-// Function to handle a DELETE request
-function handleDelete($request)
-{
-	// Return a JSON response to confirm deletion
-	echo json_encode(
-		array(
-			"message" => "Received DELETE request"
-		)
-	);
+		$response = curl_exec($curl);
+
+		curl_close($curl);
+
+		return $this->PrepareReturnValue($response);
+	}
+
+	private function PrepareReturnValue($responce)
+	{
+
+		$jsonData = json_decode($responce, true);
+
+		if ($jsonData['status'] == 'ok') {
+			$returnValue = array(
+				'status' => $jsonData['status'],
+				'aqi' => $jsonData['data']['aqi'],
+				'idx' => $jsonData['data']['idx']
+			);
+		} else {
+			$returnValue = array(
+				'status' => 'error',
+				'aqi' => 'Undefined city'
+			);
+		}
+		return $returnValue;
+	}
+
+
 }
 
 ?>

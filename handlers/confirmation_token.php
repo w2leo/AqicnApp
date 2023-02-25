@@ -1,16 +1,14 @@
 <?php
-require_once('db/dynamoDB.php');
+
+require_once('db/AwsUsersData.php');
+require_once('db/udf.php');
 
 $login = $_GET['login'];
 $confirmation_token = $_GET['confirmation_token'];
-$db = new DynamoDb();
+$db = new AwsUsersData();
 
-$result = $db->CheckConfirmationToken($login, $confirmation_token);
+$result = $db->ConfirmEmail($login, $confirmation_token);
 
-if ($result) {
-	$_SESSION['message'][] = 'Email подтверждён!';
-	header('Location: /');
-	exit;
-}
-$_SESSION['message'][] = 'Некорректная ссылка';
-header('Location: /');
+ExitPage($result->value);
+
+?>

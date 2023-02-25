@@ -1,5 +1,8 @@
 <?php
-require_once('db/validation.php');
+
+require_once('db/Validation.php');
+require_once('db/AwsUsersData.php');
+require_once('db/udf.php');
 
 $email = '';
 $password1 = '';
@@ -7,39 +10,25 @@ $password2 = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-	$login = Validation::checkInput($_POST['login'] ?? '') ? $_POST['login'] ?? '' : '';
-	$password = Validation::checkInput($_POST['password'] ?? '') ? $_POST['password'] ?? '' : '';
+	$login = Validation::CheckInput($_POST['login'] ?? '') ? $_POST['login']: '';
+	$password = Validation::CheckInput($_POST['password'] ?? '') ? $_POST['password'] : '';
 
 	$_SESSION['message'] = [];
+
 	if (!$login) {
-		$_SESSION['message'][] = 'Set valid login';
-		header('Location: /');
-		exit;
+		ExitPage('Set valid login');
 	}
 	if (!$password) {
-		$_SESSION['message'][] = 'Set valid password';
-		header('Location: /');
-		exit;
+		ExitPage('Set valid password');
 	}
 
-	$db = new DynamoDb();
-
-	if (!$db->GetVerifiedLogin($login)) {
-		$_SESSION['message'][] = 'Verify email first';
-		header('Location: /');
-		exit;
-	}
-
-	if ($userData = $db->Login($login, $password)) {
-		$password = '';
+	$db = new AwsUsersData();
+	$result = $db->Login($login, $password);
+	if ($result == UserDataReturnValues::Sucsess) {
 		$_SESSION['username'] = $login;
-		$_SESSION['userData'] = $userData['Item'];
-		header('Location: /');
-		exit;
-	} else {
-		$_SESSION['message'][] = 'Incorrect login / password';
-		header('Location: /');
-		exit;
+		$_SESSION['userData'] = $db->GetData($login);
 	}
 
+	ExitPage($result->value);
 }
+ ?>

@@ -1,36 +1,35 @@
 <?php
 
-require_once('db/validation.php');
-require_once('db/awsses.php');
+require_once('db/Validation.php');
+require_once('db/AwsSES.php');
+require_once('db/AwsUsersData.php');
+require_once('db/udf.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	$login = Validation::checkInput($_POST['login'] ?? '') ? $_POST['login'] ?? '' : '';
-	$db = new DynamoDb();
+	$login = Validation::CheckInput($_POST['recovery'] ?? '') ? $_POST['recovery'] : '';
 
-	$db->CheckLoginExists($login);
-
-	if (!$db->CheckLoginExists($login)) {
-		$_SESSION['message'][] = 'Unknown login';
-		header('Location: /');
-		exit;
+	if ($login == '') {
+		ExitPage('Incorrect login');
 	}
 
-	if (!$db->GetVerifiedLogin($login)) {
-		$_SESSION['message'][] = 'Before password recovery - confirm email first';
-		header('Location: /');
-		exit;
+	$db = new AwsUsersData();
+	$result = $db->CheckUserExists($login);
+
+	if ($result == UserDataReturnValues::UserExists) {
+		$recovery_token = bin2hex(random_bytes(40));
+		$result = $db->AddRecoveryToken($login, $recovery_token);
+
+		if ($result != UserDataReturnValues::NotConfirmedEmail) {
+			$email = $db->GetEmail($login);
+			$msg = "<h3>Password recovery at {$_SERVER['SERVER_NAME']}</h3>";
+			$msg .= "<p>If you try to recover your password, click on <a href=\"http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}?login=";
+			$msg .= $login . "&recovery_token=" . $recovery_token . "\">link</a> to set new password </p>";
+			$mail = new AwsSES();
+			$mail->SendEmail($email, $msg);
+		}
 	}
 
-	$email = $db->GetEmail($login);
-	$recovery_token = bin2hex(random_bytes(40));
-	$_SESSION['recovery_token'] = $recovery_token;
-	$_SESSION['email'] = $email;
-
-	$msg = "Password recovery at {$_SERVER['SERVER_NAME']}";
-	$msg = "If you try to recover your password, click on <a href=\"http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}?login=" . $login . "&recovery_token=" . $recovery_token . "\">link</a> to set new password";
-	$mail = new awsMail();
-	$mail->SendEmail($email, $msg);
-	$_SESSION['message'][] = 'Recovery link was sent to email';
-	header('Location: /');
-	exit;
+	ExitPage($result->value);
 }
+
+?>
