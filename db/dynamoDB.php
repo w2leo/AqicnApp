@@ -1,7 +1,4 @@
 <?php
-echo php_uname().'<br>';
-echo PHP_OS;
-
 if (strripos(php_uname(), 'MacBook'))
 $v_dir = '/Users/mikhailleonov';
 else

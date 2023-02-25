@@ -4,12 +4,22 @@
 require_once('db/validation.php');
 //Connect DB class
 require_once "db/dynamoDB.php";
+require_once('testAwsRole.php');
 
 //enable input bufferization
 ob_start();
 
 //стартуем сессию
 session_start();
+
+
+// test AWS Role
+
+$testConnector = new testAws();
+$testConnector->ConnectSES();
+$testConnector->ConnectDb();
+
+
 
 //check GET and POST requests
 if (isset($_GET)) {

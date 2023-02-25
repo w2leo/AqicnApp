@@ -37,7 +37,6 @@ class awsMail
 				'secret' => '3+a9quqp9evnltkXYtJowrHOUeIdY+/0N7j1HCvQ',
 			]
 		]);
-
     }
 
 	// Replace sender@example.com with your "From" address.
