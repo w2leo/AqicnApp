@@ -4,7 +4,7 @@ error_reporting(E_ERROR | E_PARSE);
 require_once('db/validation.php');
 //Connect DB class
 require_once "db/dynamoDB.php";
-require_once('testAwsRole.php');
+require_once('db/testAwsRole.php');
 
 //enable input bufferization
 ob_start();
