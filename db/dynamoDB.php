@@ -1,10 +1,6 @@
 <?php
-if (strripos(php_uname(), 'MacBook'))
-$v_dir = '/Users/mikhailleonov';
-else
-$v_dir = '.';
 
-require $v_dir.'/vendor/autoload.php';
+require $_SESSION['vendor_path'] . '/vendor/autoload.php';
 
 use Aws\DynamoDb\DynamoDbClient;
 

@@ -1,13 +1,18 @@
 <?php
 
-// If necessary, modify the path in the require statement below to refer to the
-// location of your Composer autoload.php file.
-if (strripos(php_uname(), 'MacBook'))
-$v_dir = '/Users/mikhailleonov';
-else
-$v_dir = '.';
+print
 
-require $v_dir.'/vendor/autoload.php';
+	$ini_array = parse_ini_file("config.ini", true);
+print_r($ini_array);
+
+
+// Set path for local develop and server instance
+if (strripos(php_uname(), 'MacBook'))
+	$v_dir = '/Users/mikhailleonov';
+else
+	$v_dir = '.';
+
+require $v_dir . '/vendor/autoload.php';
 
 use Aws\Ses\SesClient;
 use Aws\Exception\AwsException;
@@ -27,7 +32,7 @@ class awsMail
 	// ]);
 
 	function __construct()
-    {
+	{
 		$this->SesClient = new SesClient([
 			// 'profile' => 'default',
 			'version' => 'latest',
@@ -37,7 +42,7 @@ class awsMail
 				'secret' => '3+a9quqp9evnltkXYtJowrHOUeIdY+/0N7j1HCvQ',
 			]
 		]);
-    }
+	}
 
 	// Replace sender@example.com with your "From" address.
 // This address must be verified with Amazon SES.
@@ -61,7 +66,7 @@ class awsMail
 			'<p>This email was sent with <a href="https://aws.amazon.com/ses/">' .
 			'Amazon SES</a> using the <a href="https://aws.amazon.com/sdk-for-php/">' .
 			'AWS SDK for PHP</a>.</p>';
-		$html_body .= '<p>'.$msg.'<p>';
+		$html_body .= '<p>' . $msg . '<p>';
 		$char_set = 'UTF-8';
 
 		try {
