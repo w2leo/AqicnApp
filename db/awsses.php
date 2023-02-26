@@ -7,27 +7,21 @@ use Aws\Exception\AwsException;
 
 class AwsSES
 {
-	// Create an SesClient. Change the value of the region parameter if you're
-	// using an AWS Region other than US West (Oregon). Change the value of the
-	// profile parameter if you want to use a profile in your credentials file
-	// other than the default.
+	// Create an SesClient.
 	private $SesClient;
 
-	function __construct()
+	public function __construct()
 	{
 		$this->SesClient = new SesClient([
 			// 'profile' => 'default',
 			'version' => 'latest',
 			'region' => 'us-east-1'
 		]);
+		$this->sender_email = 'robot@rfbuild.ru';
 	}
 
 	// This address must be verified with Amazon SES.
-	private $sender_email = 'robot@rfbuild.ru';
-
-	// Replace these sample addresses with the addresses of your recipients. If
-	// your account is still in the sandbox, these addresses must be verified.
-	private $recipient_emails;
+	private $sender_email;
 
 	// Specify a configuration set. If you do not want to use a configuration
 	// set, comment the following variable, and the
