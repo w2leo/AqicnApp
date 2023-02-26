@@ -1,6 +1,8 @@
 <?php
 require_once('db/awsses.php');
 require_once('db/validation.php');
+require_once('db/dynamoDB.php');
+
 
 $login = '';
 $email = '';

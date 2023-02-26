@@ -1,6 +1,7 @@
 <?php
 
 require_once('db/validation.php');
+require_once('db/dynamoDB.php');
 require_once('db/awsses.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

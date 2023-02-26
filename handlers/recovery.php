@@ -2,6 +2,8 @@
 
 require_once('db/validation.php');
 require_once('db/awsses.php');
+require_once('db/dynamoDB.php');
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$login = Validation::checkInput($_POST['login'] ?? '') ? $_POST['login'] ?? '' : '';

@@ -16,11 +16,13 @@ $_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']
 if ($_SERVER['REQUEST_METHOD']=='GET' && isset($_GET)) {
 	$flagError = false;
 	foreach ($_GET as $key => $value) {
-		if (!Validation::checkInput($value)) {
-			unset($_GET[$key]);
-			$flagError = true;
+		// if (!Validation::checkInput($value)) {
+		// 	unset($_GET[$key]);
+		// 	$flagError = true;
 
-		}
+			$_GET[$key] = Validation::validate($_GET[$key]);
+
+		// }
 	}
 	if ($flagError) {
 		header('Location: /');
