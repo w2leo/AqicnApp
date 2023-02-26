@@ -2,7 +2,7 @@
 
 require_once('db/validation.php');
 require_once('db/dynamoDB.php');
-require_once('db/awsses.php');
+require_once('db/AwsSES.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$email = $_SESSION['email'];
