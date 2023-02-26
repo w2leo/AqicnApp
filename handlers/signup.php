@@ -1,6 +1,6 @@
 <?php
 require_once('db/AwsSES.php');
-require_once('db/validation.php');
+require_once('db/Validation.php');
 require_once('db/dynamoDB.php');
 
 
