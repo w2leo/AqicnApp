@@ -11,11 +11,19 @@ echo $test->Status;
 
 // $test->GetInfo();
 
-$fields = array('Login', 'Email');
-$values = array('w1', 'w1@rfbuild.ru');
-$compareOp = array('');
+$fields = array('MainCity', 'Email', 'VerifiedEmail');
+$values = array('XXXqweqw', 'testqwe1', false);
+$compareOp = array('CONTAINS', 'CONTAINS');
 
-$test->FindItem($fields, $values, $compareOp);
+//TODO
+// Add enums for comprasions
+
+// print_r($test->FindItem($fields, $values, $compareOp));
+
+
+$test->AddItem('NewLogin3', $fields, $values);
+
+
 
 
 // $start = microtime(true);
@@ -33,6 +41,9 @@ $test->FindItem($fields, $values, $compareOp);
 // $start = microtime(true);
 // $test->CheckPrimaryValue('wwwwwww1');
 // echo 'Время выполнения скрипта QueryNotExists: '.round(microtime(true) - $start, 4).' сек.'.PHP_EOL;
+
+
+
 
 
 ?>

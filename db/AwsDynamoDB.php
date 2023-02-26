@@ -1,4 +1,5 @@
 <?php
+use Vtiful\Kernel\Format;
 
 require_once $_SESSION['config']['vendor_dir'] . '/vendor/autoload.php';
 require_once('db/AwsDynamoDB.php');
@@ -15,6 +16,7 @@ abstract class AwsDynamoDB
 	 * 400 - table doesn't exists
 	 */
 	public int $Status;
+
 	protected $client;
 	protected $tableName;
 	protected $primaryField;
@@ -53,7 +55,7 @@ abstract class AwsDynamoDB
 	/**
 	 * Get and Save Item data into $data
 	 * @param string $primaryValue Value for Primary Key
-	 * @return TRUE of Error code
+	 * @return mixed TRUE of Error code
 	 */
 	protected function GetItem(string $primaryValue)
 	{
@@ -69,6 +71,7 @@ abstract class AwsDynamoDB
 			);
 			return true;
 		} catch (AwsException $e) {
+			unset($this->data);
 			return $e->getStatusCode();
 		}
 	}
@@ -77,9 +80,10 @@ abstract class AwsDynamoDB
 	 *
 	 * @param array $fields Fields for searching
 	 * @param array $fieldValues Fields value
+	 * @param array $compareOperators Comprasion operators for each field
 	 * @return mixed Array of all finded items or FALSE if errors in data
 	 */
-	public function FindItem(array $fields, array $fieldValues, $compareOperators)
+	public function FindItem(array $fields, array $fieldValues, array $compareOperators)
 	{
 		if (!Validation::CompareArrayLengths([$fields, $fieldValues, $compareOperators])) {
 			return false;
@@ -89,9 +93,7 @@ abstract class AwsDynamoDB
 		$scanFilter = array();
 		foreach ($fields as $index => $field) {
 			$scanFilter[$field] = array(
-				'AttributeValueList' => array(
-					array(strtoupper(substr(gettype($fieldValues[$index]), 0, 1)) => $fieldValues[$index])
-				),
+				'AttributeValueList' => array($this->Format($fieldValues[$index])),
 				'ComparisonOperator' => $compareOperators[$index]
 			);
 		}
@@ -113,11 +115,44 @@ abstract class AwsDynamoDB
 
 	}
 
-	protected function AddItem($primaryValue, array $fields, array $fieldValues)
+	/**
+	 * Add item to DB
+	 * @param string $primaryValue Primary Value
+	 * @param array $fields Fields for searching
+	 * @param array $fieldValues Fields value
+	 * @return mixed StatusCode or FALSE if errors in data
+	 */
+	public function AddItem($primaryValue, array $fields, array $fieldValues)
+	{
+		if (!Validation::CompareArrayLengths([$fields, $fieldValues])) {
+			return false;
+		}
+
+		$itemData = array();
+		$itemData[$this->primaryField] = $this->Format($primaryValue);
+		foreach ($fields as $index => $field) {
+			$itemData[$field] = $this->Format($fieldValues[$index]);
+		}
+
+		$result = $this->client->putItem(
+			array(
+				'TableName' => $this->tableName,
+				'Item' => $itemData
+			)
+		);
+
+		return $result->get('@metadata')['statusCode'];
+	}
+
+	protected function DeleteItem($primaryValue)
 	{
 
 	}
 
+	protected function Format($value)
+	{
+		return array(Validation::GetAwsType($value) => $value);
+	}
 }
 
 ?>

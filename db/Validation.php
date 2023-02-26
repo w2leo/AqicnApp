@@ -30,6 +30,21 @@ class Validation {
 		return true;
 	}
 
+	static function GetAwsType($value): string
+	{
+		switch (substr(gettype($value),0,1)) {
+			case 'i':
+				return 'N';
+			case 'b':
+				return 'BOOL';
+			case 'a':
+				return 'SS';
+			//implement Binary Later
+			default:
+				return 'S';
+		}
+	}
+
 }
 
 ?>
