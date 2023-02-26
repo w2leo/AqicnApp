@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	$msg = "Password recovery at {$_SERVER['SERVER_NAME']}";
 	$msg = "If you try to recover your password, click on <a href=\"http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}?login=" . $login . "&recovery_token=" . $recovery_token . "\">link</a> to set new password";
-	$mail = new awsMail();
+	$mail = new AwsSES();
 	$mail->SendEmail($email, $msg);
 	$_SESSION['message'][] = 'Recovery link was sent to email';
 	header('Location: /');

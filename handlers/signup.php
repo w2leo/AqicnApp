@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$msg .= "Click on  <a href=\"http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}?login=" . $login . "&confirmation_token=" . $confirmationToken . "\">link</a> to confirm email";
 	$_SESSION['message'][] = $msg;
 
-	$mail = new awsMail();
+	$mail = new AwsSES();
 	$mail->SendEmail($email, $msg);
 
 	header('Location: /');
