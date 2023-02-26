@@ -1,40 +1,20 @@
 <?php
 
-require $_SESSION['config']['vendor_dir'] . '/vendor/autoload.php';
+require_once $_SESSION['config']['vendor_dir'] . '/vendor/autoload.php';
+require_once('db/AwsDynamoDB.php');
 
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\Exception\AwsException;
 
-
-require_once('db/AwsDynamoDB.php');
-
 final class AwsUsersData extends AwsDynamoDB
 {
 	/**
-	 * @return mixed
+	 * Constructor for connecting to table UsersData
 	 */
 	public function __construct()
 	{
 		$this->tableName = 'UsersData';
-		$this->Connect();
-	}
-
-	/**
-	 * @return mixed
-	 */
-	protected function Connect()
-	{
-		try {
-			$this->client = DynamoDbClient::factory($this->connectionData);
-			// var_dump($this->client);
-			$this->client->describeTable(
-				array(
-					'TableName' => $this->tableName
-				)
-			);
-		} catch (AwsException $e) {
-			echo $e->getStatusCode().'<br>';
-		}
+		parent::__construct();
 	}
 
 	/**
