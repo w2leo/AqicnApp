@@ -9,26 +9,17 @@ class awsMail
 {
 
 	// Create an SesClient. Change the value of the region parameter if you're
-// using an AWS Region other than US West (Oregon). Change the value of the
-// profile parameter if you want to use a profile in your credentials file
-// other than the default.
+	// using an AWS Region other than US West (Oregon). Change the value of the
+	// profile parameter if you want to use a profile in your credentials file
+	// other than the default.
 	private $SesClient;
-	//  = new SesClient([
-	// 	'profile' => 'default',
-	// 	'version' => 'latest',
-	// 	'region' => 'us-east-1'
-	// ]);
 
 	function __construct()
 	{
 		$this->SesClient = new SesClient([
 			// 'profile' => 'default',
 			'version' => 'latest',
-			'region' => 'us-east-1',
-			'credentials' => [
-				'key' => 'AKIASIUJXHEWQ5XZ3MWC',
-				'secret' => '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',
-			]
+			'region' => 'us-east-1'
 		]);
 	}
 

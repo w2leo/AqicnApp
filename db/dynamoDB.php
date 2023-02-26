@@ -10,11 +10,7 @@ class DynamoDb
 	private $result;
 	private $connectionData = array(
 		'region' => 'us-east-1',
-		'version' => 'latest',
-		'credentials' => [
-			'key' => 'AKIASIUJXHEWQ5XZ3MWC',
-			'secret' => '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',
-		]
+		'version' => 'latest'
 	);
 
 	private function ConnectDB()
