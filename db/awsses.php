@@ -1,18 +1,6 @@
 <?php
 
-print
-
-	$ini_array = parse_ini_file("config.ini", true);
-print_r($ini_array);
-
-
-// Set path for local develop and server instance
-if (strripos(php_uname(), 'MacBook'))
-	$v_dir = '/Users/mikhailleonov';
-else
-	$v_dir = '.';
-
-require $v_dir . '/vendor/autoload.php';
+require $_SESSION['config']['vendor_dir'] . '/vendor/autoload.php';
 
 use Aws\Ses\SesClient;
 use Aws\Exception\AwsException;

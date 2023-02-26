@@ -1,6 +1,6 @@
 <?php
 
-require $_SESSION['vendor_path'] . '/vendor/autoload.php';
+require $_SESSION['config']['vendor_dir']. '/vendor/autoload.php';
 
 use Aws\DynamoDb\DynamoDbClient;
 

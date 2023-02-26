@@ -1,6 +1,8 @@
 <?php
 //error_reporting(E_ERROR | E_PARSE);
 
+require_once('db/validation.php');
+
 //enable input bufferization
 ob_start();
 
@@ -8,10 +10,10 @@ ob_start();
 session_start();
 
 // init session from config.ini file
-$_SESSION['vendor_path'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
+$_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
 
 //check and validate GET and POST requests
-if (isset($_GET)) {
+if ($_SERVER['REQUEST_METHOD']=='GET' && isset($_GET)) {
 	$flagError = false;
 	foreach ($_GET as $key => $value) {
 		if (!Validation::checkInput($value)) {
@@ -26,16 +28,11 @@ if (isset($_GET)) {
 	}
 }
 
-if (isset($_POST)) {
+if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST)) {
 	foreach ($_POST as $key => $value) {
-		$_GET[$key] = Validation::validate($value);
+		$_POST[$key] = Validation::validate($value);
 	}
 }
-
-
-require_once('db/validation.php');
-require_once('db/dynamoDB.php');
-require_once('db/testAwsRole.php');
 
 //debug info
 echo "<pre>GET:", print_r($_GET), "</pre>";

@@ -1,5 +1,6 @@
 <?php
 require_once('db/validation.php');
+require_once('db/dynamoDB.php');
 
 $email = '';
 $password1 = '';
