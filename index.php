@@ -13,24 +13,13 @@ session_start();
 $_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
 
 //check and validate GET and POST requests
-if ($_SERVER['REQUEST_METHOD']=='GET' && isset($_GET)) {
-	$flagError = false;
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET)) {
 	foreach ($_GET as $key => $value) {
-		// if (!Validation::checkInput($value)) {
-		// 	unset($_GET[$key]);
-		// 	$flagError = true;
-
-			$_GET[$key] = Validation::validate($_GET[$key]);
-
-		// }
-	}
-	if ($flagError) {
-		header('Location: /');
-		exit;
+		$_GET[$key] = Validation::validate($_GET[$key]);
 	}
 }
 
-if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST)) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST)) {
 	foreach ($_POST as $key => $value) {
 		$_POST[$key] = Validation::validate($value);
 	}
