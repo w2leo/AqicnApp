@@ -13,53 +13,19 @@ final class AwsUsersData extends AwsDynamoDB
 	 */
 	public function __construct()
 	{
+		$this->primaryField = 'Login';
 		$this->tableName = 'UsersData';
 		parent::__construct();
 	}
 
-	/**
-	 *
-	 * @param mixed $primaryField
-	 * @param mixed $primaryValue
-	 * @return mixed
-	 */
-	public function GetItem($primaryField, $primaryValue)
+	public function GetInfo()
 	{
+		var_dump($this->client->describeTable(
+			array(
+				'TableName' => $this->tableName
+			)
+			));
 	}
-
-	/**
-	 *
-	 * @param mixed $fields
-	 * @param mixed $fieldValues
-	 * @return mixed
-	 */
-	public function FindItem($fields, $fieldValues)
-	{
-	}
-
-	/**
-	 *
-	 * @param mixed $updateFields
-	 * @param mixed $fieldValues
-	 * @param mixed $removeFields
-	 * @return mixed
-	 */
-	public function UpdateItem($updateFields, $fieldValues, $removeFields)
-	{
-	}
-
-	/**
-	 *
-	 * @param mixed $primaryField
-	 * @param mixed $primaryValue
-	 * @param mixed $fields
-	 * @param mixed $fieldValues
-	 * @return mixed
-	 */
-	public function AddItem($primaryField, $primaryValue, $fields, $fieldValues)
-	{
-	}
-
 }
 
 ?>

@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$pass1 = $_POST['pass1'] ?? '';
 	$pass2 = $_POST['pass2'] ?? '';
 
-	$pass1 = Validation::checkInput($_POST['pass1'] ?? '') ? $_POST['pass1'] ?? '' : '';
-	$pass2 = Validation::checkInput($_POST['pass2'] ?? '') ? $_POST['pass2'] ?? '' : '';
+	$pass1 = Validation::CheckInput($_POST['pass1'] ?? '') ? $_POST['pass1'] ?? '' : '';
+	$pass2 = Validation::CheckInput($_POST['pass2'] ?? '') ? $_POST['pass2'] ?? '' : '';
 
 	$_SESSION['message'] = [];
 

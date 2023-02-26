@@ -15,13 +15,13 @@ $_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']
 //check and validate GET and POST requests
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET)) {
 	foreach ($_GET as $key => $value) {
-		$_GET[$key] = Validation::validate($_GET[$key]);
+		$_GET[$key] = Validation::Validate($_GET[$key]);
 	}
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST)) {
 	foreach ($_POST as $key => $value) {
-		$_POST[$key] = Validation::validate($value);
+		$_POST[$key] = Validation::Validate($value);
 	}
 }
 

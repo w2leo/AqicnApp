@@ -8,8 +8,8 @@ $password2 = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-	$login = Validation::checkInput($_POST['login'] ?? '') ? $_POST['login'] ?? '' : '';
-	$password = Validation::checkInput($_POST['password'] ?? '') ? $_POST['password'] ?? '' : '';
+	$login = Validation::CheckInput($_POST['login'] ?? '') ? $_POST['login'] ?? '' : '';
+	$password = Validation::CheckInput($_POST['password'] ?? '') ? $_POST['password'] ?? '' : '';
 
 	$_SESSION['message'] = [];
 	if (!$login) {

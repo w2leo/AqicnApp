@@ -2,7 +2,7 @@
 
 class Validation {
 
-	static function validate($data)
+	static function Validate($data)
 	{
 		$data = trim($data);
 		$data = stripslashes($data);
@@ -10,10 +10,24 @@ class Validation {
 		return $data;
 	}
 
-	static function checkInput($input): bool
+	static function CheckInput($input): bool
 	{
-		$data = Validation::validate($input);
+		$data = Validation::Validate($input);
 		return $input != '' && $data == $input;
+	}
+
+	static function CompareArrayLengths(array $arrays): bool
+	{
+		foreach ($arrays as $index => $item) {
+			if ($index == 0)
+				continue;
+
+			if (count($item) != count($arrays[$index-1]))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

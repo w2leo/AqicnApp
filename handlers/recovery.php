@@ -6,7 +6,7 @@ require_once('db/dynamoDB.php');
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	$login = Validation::checkInput($_POST['login'] ?? '') ? $_POST['login'] ?? '' : '';
+	$login = Validation::CheckInput($_POST['login'] ?? '') ? $_POST['login'] ?? '' : '';
 	$db = new DynamoDb();
 
 	$db->CheckLoginExists($login);

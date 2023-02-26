@@ -16,9 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		FILTER_VALIDATE_EMAIL
 	);
 
-	$login = Validation::checkInput($_POST['login'] ?? '') ? $_POST['login'] ?? '' : '';
-	$pass1 = Validation::checkInput($_POST['password'] ?? '') ? $_POST['password'] ?? '' : '';
-	$pass2 = Validation::checkInput($_POST['confirmPassword'] ?? '') ? $_POST['confirmPassword'] ?? '' : '';
+	$login = Validation::CheckInput($_POST['login'] ?? '') ? $_POST['login'] ?? '' : '';
+	$pass1 = Validation::CheckInput($_POST['password'] ?? '') ? $_POST['password'] ?? '' : '';
+	$pass2 = Validation::CheckInput($_POST['confirmPassword'] ?? '') ? $_POST['confirmPassword'] ?? '' : '';
 
 	// $_SESSION['field_email'][]=$email;
 	// $_SESSION['field_login'][]=$login;
