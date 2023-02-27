@@ -14,7 +14,7 @@ abstract class AwsDynamoDB
 	 * 200 - OK
 	 * 400 - table doesn't exists
 	 */
-	public int $Status;
+	public int $ConnectStatus;
 
 	protected $client;
 	protected $tableName;
@@ -28,7 +28,7 @@ abstract class AwsDynamoDB
 
 	public function __construct()
 	{
-		$this->Status = $this->Connect();
+		$this->ConnectStatus = $this->Connect();
 	}
 
 	/**
@@ -45,7 +45,7 @@ abstract class AwsDynamoDB
 					'TableName' => $this->tableName
 				)
 			);
-			return $result->get('@metadata')['statusCode'];
+			return $this->GetStatusCode($result);
 		} catch (AwsException $e) {
 			return $e->getStatusCode();
 		}
@@ -56,18 +56,20 @@ abstract class AwsDynamoDB
 	 * @param string $primaryValue Value for Primary Key
 	 * @return mixed TRUE of Error code
 	 */
-	protected function GetItem(string $primaryValue)
+	public function GetItem(string $primaryValue)
 	{
 		try {
-			$this->data = $this->client->getItem(
+			$result = $this->client->getItem(
 				array(
 					'ConsistentRead' => true,
 					'TableName' => $this->tableName,
 					'Key' => array(
 						$this->primaryField => ['S' => $primaryValue]
 					)
-				)
+					)
+
 			);
+			$this->data = $result['Item'];
 			return true;
 		} catch (AwsException $e) {
 			unset($this->data);
@@ -82,7 +84,7 @@ abstract class AwsDynamoDB
 	 * @param array $compareOperators Comprasion operators for each field
 	 * @return mixed Array of all finded items or FALSE if errors in data
 	 */
-	public function FindItem(array $fields, array $fieldValues, array $compareOperators)
+	public function FindItems(array $fields, array $fieldValues, array $compareOperators)
 	{
 		if (!Validation::CompareArrayLengths([$fields, $fieldValues, $compareOperators])) {
 			return false;
@@ -108,10 +110,75 @@ abstract class AwsDynamoDB
 		return iterator_to_array($iterator, true);
 	}
 
-	protected function UpdateItem(array $updateFields, array $fieldValues, array $removeFields)
+	public function RemoveFields($primaryValue, array $removeFields)
 	{
+		if (count($removeFields) == 0) {
+			return false;
+		}
+
+		foreach ($removeFields as $index => $item) {
+			if ($index == 0) {
+				$updateExpression = 'REMOVE ';
+			}
+			$updateExpression .= $item . ', ';
+		}
+		$updateExpression = rtrim($updateExpression, ', ');
+
+		$result = $this->client->updateItem(
+			array(
+				'TableName' => $this->tableName,
+				'Key' => array(
+					$this->primaryField => $this->Format($primaryValue)
+				),
+				'UpdateExpression' => $updateExpression,
+				'ReturnValues' => 'ALL_NEW'
+			)
+		);
+
+		if (isset($result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)])) {
+			$this->data = $result['Attributes'];
+			return $result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)];
+		}
+	}
 
 
+	public function UpdateItem(
+		$primaryValue, array $updateFields, array $fieldValues
+	)
+	{
+		if (!Validation::CompareArrayLengths([$updateFields, $fieldValues])) {
+			return false;
+		}
+
+		$updateExpression = '';
+
+		foreach ($updateFields as $index => $item) {
+			if ($index == 0) {
+				$updateExpression .= 'SET ';
+				$expressionAttributeValues = array();
+			}
+			$updateExpression .= $item . ' = :f' . $index . ', ';
+			$expressionAttributeValues[':f' . $index] = $this->Format($fieldValues[$index]);
+		}
+		$updateExpression = rtrim($updateExpression, ', ');
+		$flagUpdate = strlen($updateExpression) > 0;
+
+		$result = $this->client->updateItem(
+			array(
+				'TableName' => $this->tableName,
+				'Key' => array(
+					$this->primaryField => $this->Format($primaryValue)
+				),
+				'UpdateExpression' => $updateExpression,
+				'ExpressionAttributeValues' => $expressionAttributeValues,
+				'ReturnValues' => 'ALL_NEW'
+			)
+		);
+
+		if (isset($result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)])) {
+			$this->data = $result['Attributes'];
+			return $result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)];
+		}
 	}
 
 	/**
@@ -119,7 +186,7 @@ abstract class AwsDynamoDB
 	 * @param string $primaryValue Primary Value
 	 * @param array $fields Fields for searching
 	 * @param array $fieldValues Fields value
-	 * @return mixed Returns status code afted insert 200 - ok, 400 - error
+	 * @return mixed Returns status code after insert 200 - ok, 400 - error or FALSE
 	 */
 	public function AddItem($primaryValue, array $fields, array $fieldValues)
 	{
@@ -141,7 +208,7 @@ abstract class AwsDynamoDB
 					'ConditionExpression' => 'attribute_not_exists(Login)'
 				)
 			);
-			$statusCode = $result->get('@metadata')['statusCode'];
+			$statusCode = $this->GetStatusCode($result);
 		} catch (AwsException $e) {
 			$statusCode = $e->getStatusCode();
 		} finally {
@@ -149,14 +216,36 @@ abstract class AwsDynamoDB
 		}
 	}
 
-	protected function DeleteItem($primaryValue)
+	/**
+	 *
+	 * @param array $primaryValue Primary value
+	 * @return mixed Returns deleted primary value of null
+	 */
+	public function DeleteItem($primaryValue)
 	{
+		$result = $this->client->deleteItem(
+			array(
+				'TableName' => $this->tableName,
+				'Key' => array(
+					$this->primaryField => $this->Format($primaryValue)
+				),
+				'ReturnValues' => 'ALL_OLD'
+			)
+		);
+
+		if (isset($result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)]))
+			return $result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)];
 
 	}
 
 	protected function Format($value)
 	{
 		return array(Validation::GetAwsType($value) => $value);
+	}
+
+	protected function GetStatusCode($result)
+	{
+		return $result->get('@metadata')['statusCode'];
 	}
 }
 
