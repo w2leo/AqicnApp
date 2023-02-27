@@ -1,5 +1,4 @@
 <?php
-use Vtiful\Kernel\Format;
 
 require_once $_SESSION['config']['vendor_dir'] . '/vendor/autoload.php';
 require_once('db/AwsDynamoDB.php');
@@ -120,7 +119,7 @@ abstract class AwsDynamoDB
 	 * @param string $primaryValue Primary Value
 	 * @param array $fields Fields for searching
 	 * @param array $fieldValues Fields value
-	 * @return mixed StatusCode or FALSE if errors in data
+	 * @return mixed Returns status code afted insert 200 - ok, 400 - error
 	 */
 	public function AddItem($primaryValue, array $fields, array $fieldValues)
 	{
@@ -134,14 +133,20 @@ abstract class AwsDynamoDB
 			$itemData[$field] = $this->Format($fieldValues[$index]);
 		}
 
-		$result = $this->client->putItem(
-			array(
-				'TableName' => $this->tableName,
-				'Item' => $itemData
-			)
-		);
-
-		return $result->get('@metadata')['statusCode'];
+		try {
+			$result = $this->client->putItem(
+				array(
+					'TableName' => $this->tableName,
+					'Item' => $itemData,
+					'ConditionExpression' => 'attribute_not_exists(Login)'
+				)
+			);
+			$statusCode = $result->get('@metadata')['statusCode'];
+		} catch (AwsException $e) {
+			$statusCode = $e->getStatusCode();
+		} finally {
+			return $statusCode;
+		}
 	}
 
 	protected function DeleteItem($primaryValue)
