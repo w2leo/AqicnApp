@@ -14,21 +14,28 @@ abstract class AwsDynamoDB
 	 * 200 - OK
 	 * 400 - table doesn't exists
 	 */
-	public int $ConnectStatus;
+	protected int $connectStatus;
+
+	public function GetConnectionStatus()
+	{
+		return $this->connectStatus;
+	}
 
 	protected $client;
 	protected $tableName;
 	protected $primaryField;
 	protected $data;
 
-	protected $connectionData = array(
-		'region' => 'us-east-1',
-		'version' => 'latest'
-	);
-
-	public function __construct()
+	public function GetData()
 	{
-		$this->ConnectStatus = $this->Connect();
+		return $this->data;
+	}
+
+	protected $connectionData;
+
+	protected function __construct()
+	{
+		$this->connectStatus = $this->Connect();
 	}
 
 	/**
@@ -54,9 +61,9 @@ abstract class AwsDynamoDB
 	/**
 	 * Get and Save Item data into $data
 	 * @param string $primaryValue Value for Primary Key
-	 * @return mixed TRUE of Error code
+	 * @return mixed TRUE of Error code.
 	 */
-	public function GetItem(string $primaryValue)
+	protected function GetItem(string $primaryValue)
 	{
 		try {
 			$result = $this->client->getItem(
@@ -66,7 +73,7 @@ abstract class AwsDynamoDB
 					'Key' => array(
 						$this->primaryField => ['S' => $primaryValue]
 					)
-					)
+				)
 
 			);
 			$this->data = $result['Item'];
@@ -84,7 +91,7 @@ abstract class AwsDynamoDB
 	 * @param array $compareOperators Comprasion operators for each field
 	 * @return mixed Array of all finded items or FALSE if errors in data
 	 */
-	public function FindItems(array $fields, array $fieldValues, array $compareOperators)
+	protected function FindItems(array $fields, array $fieldValues, array $compareOperators)
 	{
 		if (!Validation::CompareArrayLengths([$fields, $fieldValues, $compareOperators])) {
 			return false;
@@ -110,6 +117,12 @@ abstract class AwsDynamoDB
 		return iterator_to_array($iterator, true);
 	}
 
+	/**
+	 * Save new data to $data
+	 * @param array $primaryValue Primary value
+	 * @param array $removeFields Fields names to remove
+	 * @return mixed Status code of operation
+	 */
 	public function RemoveFields($primaryValue, array $removeFields)
 	{
 		if (count($removeFields) == 0) {
@@ -137,11 +150,17 @@ abstract class AwsDynamoDB
 
 		if (isset($result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)])) {
 			$this->data = $result['Attributes'];
-			return $result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)];
+			return $this->GetStatusCode($result);
 		}
 	}
 
-
+	/**
+	 * Save new data to $data
+	 * @param array $primaryValue Primary value
+	 * @param array $updateFields Fields names to remove
+	 * @param array $fieldValues Fields values
+	 * @return mixed Status code of operation
+	 */
 	public function UpdateItem(
 		$primaryValue, array $updateFields, array $fieldValues
 	)
@@ -161,7 +180,6 @@ abstract class AwsDynamoDB
 			$expressionAttributeValues[':f' . $index] = $this->Format($fieldValues[$index]);
 		}
 		$updateExpression = rtrim($updateExpression, ', ');
-		$flagUpdate = strlen($updateExpression) > 0;
 
 		$result = $this->client->updateItem(
 			array(
@@ -177,7 +195,7 @@ abstract class AwsDynamoDB
 
 		if (isset($result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)])) {
 			$this->data = $result['Attributes'];
-			return $result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)];
+			return $this->GetStatusCode($result);
 		}
 	}
 
@@ -235,7 +253,6 @@ abstract class AwsDynamoDB
 
 		if (isset($result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)]))
 			return $result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)];
-
 	}
 
 	protected function Format($value)
