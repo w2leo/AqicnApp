@@ -9,8 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$login = $_SESSION['login'];
 	$recovery_token = $_SESSION['recovery_token'];
 
-	$pass1 = Validation::CheckInput($$_POST['pass1'] ?? '') ? $_POST['pass1'] : '';
-	$pass2 = Validation::CheckInput($$_POST['pass2'] ?? '') ? $_POST['pass2'] : '';
+	$pass1 = Validation::CheckInput($_POST['pass1'] ?? '') ? $_POST['pass1'] : '';
+	$pass2 = Validation::CheckInput($_POST['pass2'] ?? '') ? $_POST['pass2'] : '';
 
 	$_SESSION['message'] = [];
 

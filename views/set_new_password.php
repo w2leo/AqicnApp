@@ -11,10 +11,9 @@
 
 	<form class="box" method="POST">
 		<h1>Восстановление пароля: шаг 2 из 2</h1>
-		<input type="hidden" name="login" value=<?php echo $_GET['login']?>>
 		<input type="password" name="pass1" id="pass1" placeholder="Password">
 		<input type="password" name="pass2" id="pass2" placeholder="Confirm password">
-		<input type="submit" name="submitRegister" value="Reset">
+		<input type="submit" name="resetSubmit" value="Reset" >
 		<input type="submit" name="" value="Back" formaction="/">
 		</div>
 	</form>

@@ -25,7 +25,7 @@ enum UserDataReturnValues: string
 	case UserExists = 'User with such login&email exists';
 	case UserNotExists = 'No such user';
 	case EmailConfirmed = 'Email confirmed';
-	case WrongToken = 'Wrong Token for this usser';
+	case WrongToken = 'Wrong Token for';
 	case RightToken = 'Token matched';
 	case PasswordChanded = 'Password Sucsessfully changed';
 
@@ -61,8 +61,8 @@ final class AwsUsersData extends AwsDynamoDB
 
 	public function AddUser($login, $passwordHash, $email, $confirmationToken)
 	{
-		if (!self::CheckUserExists($login, $email)) {
-			$result =  self::AddItem(
+		if (self::CheckUserExists($login, $email) == UserDataReturnValues::UserNotExists) {
+			$result = self::AddItem(
 				$login,
 				[UserDataFields::Email->name, UserDataFields::Password->name, UserDataFields::ConfirmationToken->name],
 				[$email, $passwordHash, $confirmationToken]
@@ -89,17 +89,19 @@ final class AwsUsersData extends AwsDynamoDB
 
 	private function CheckConfirmationToken($login)
 	{
-		return isset($this->data[UserDataFields::ConfirmationToken->name]);
+		$userData = self::FindItems([$this->primaryField],[$login], ['EQ']);
+		$result = isset($userData[0][UserDataFields::ConfirmationToken->name]);
+		return $result;
 	}
 
 	public function ConfirmEmail($login, $confirmationToken)
 	{
 		$userData = self::FindItems(
-			[$this->primaryField, UserDataFields::ConfirmationToken],
+			[$this->primaryField, UserDataFields::ConfirmationToken->name],
 			[$login, $confirmationToken],
 			['EQ', 'EQ']
 		);
-		if (isset($userData[UserDataFields::ConfirmationToken->name])) {
+		if (isset($userData[0][UserDataFields::ConfirmationToken->name]['S'])) {
 			if (self::RemoveFields($login, [UserDataFields::ConfirmationToken->name]) == 200)
 				return UserDataReturnValues::EmailConfirmed;
 		}
@@ -110,7 +112,7 @@ final class AwsUsersData extends AwsDynamoDB
 	{
 		if (!self::CheckConfirmationToken($login)) {
 			self::UpdateItem($login, [UserDataFields::RecoveryToken->name], [$recoveryToken]);
-			return true;
+			return UserDataReturnValues::Sucsess;
 			;
 		} else
 			return UserDataReturnValues::NotConfirmedEmail;
@@ -118,7 +120,7 @@ final class AwsUsersData extends AwsDynamoDB
 
 	public function CheckRecoveryToken($login, $recoveryToken)
 	{
-		$data = self::FindItems([$this->primaryField, UserDataFields::RecoveryToken], [$login, $recoveryToken], ['EQ', 'EQ']);
+		$data = self::FindItems([$this->primaryField, UserDataFields::RecoveryToken->name], [$login, $recoveryToken], ['EQ', 'EQ']);
 		return count($data) > 0 ? UserDataReturnValues::RightToken : UserDataReturnValues::WrongToken;
 	}
 
@@ -187,14 +189,14 @@ final class AwsUsersData extends AwsDynamoDB
 
 	public function GetEmail($login)
 	{
-		$userData = self::FindItems([$this->primaryField], [$login],['EQ']);
+		$userData = self::FindItems([$this->primaryField], [$login], ['EQ']);
 		return $userData[0][UserDataFields::Email->name]['S'];
 	}
 
 	public function GetData($login)
 	{
-		if (isset($this->data) && $login == $this->data[$this->primaryField]['S'])
-		{
+		if (isset($this->data) && $login == $this->data[$this->primaryField]['S']) {
+			self::GetItem($login);
 			return $this->data;
 		}
 	}
