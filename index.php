@@ -5,7 +5,6 @@ require_once('db/Validation.php');
 
 //enable input bufferization
 ob_start();
-
 //стартуем сессию
 session_start();
 
@@ -42,7 +41,7 @@ MESSAGE;
 }
 
 //confirm email - check link click
-if (!empty($confirmation_token = isset($_GET['confirmation_token']))) {
+if (!empty(isset($_GET['confirmation_token']))) {
 	include "handlers/confirmation_token.php";
 }
 
@@ -58,24 +57,24 @@ if (isset($_GET['logout'])) {
 
 //Show private part if $_SESSION['username'] exists
 if (isset($_SESSION['username'])) {
-	include "views/index.php";
+	include "views/_index.html";
 
 
 } elseif (!isset($_GET['recovery']) && !isset($_GET['signup'])) {
 
 	//handle login
 	include "handlers/login.php";
-	include "views/login.php";
+	include "views/login.html";
 } elseif (isset($_GET['recovery'])) {
 
 	//handle password recovery
 	include "handlers/recovery.php";
-	include "views/recovery.php";
+	include "views/recovery.html";
 } elseif (isset($_GET['signup'])) {
 
 	//signup form
 	include "handlers/signup.php";
-	include "views/signup.php";
+	include "views/signup.html";
 }
 
 ?>
