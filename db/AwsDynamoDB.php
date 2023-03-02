@@ -14,11 +14,11 @@ abstract class AwsDynamoDB
 	 * 200 - OK
 	 * 400 - table doesn't exists
 	 */
-	protected int $connectStatus;
+	protected int $isConnect;
 
 	public function GetConnectionStatus()
 	{
-		return $this->connectStatus;
+		return $this->isConnect;
 	}
 
 	protected $client;
@@ -35,7 +35,7 @@ abstract class AwsDynamoDB
 
 	protected function __construct()
 	{
-		$this->connectStatus = $this->Connect();
+		$this->isConnect = $this->Connect();
 	}
 
 	/**
@@ -52,7 +52,7 @@ abstract class AwsDynamoDB
 					'TableName' => $this->tableName
 				)
 			);
-			return $this->GetStatusCode($result);
+			return $this->GetStatusCode($result) == 200;
 		} catch (AwsException $e) {
 			return $e->getStatusCode();
 		}
@@ -123,7 +123,7 @@ abstract class AwsDynamoDB
 	 * @param array $removeFields Fields names to remove
 	 * @return mixed Status code of operation
 	 */
-	public function RemoveFields($primaryValue, array $removeFields)
+	protected function RemoveFields($primaryValue, array $removeFields)
 	{
 		if (count($removeFields) == 0) {
 			return false;
@@ -161,9 +161,7 @@ abstract class AwsDynamoDB
 	 * @param array $fieldValues Fields values
 	 * @return mixed Status code of operation
 	 */
-	public function UpdateItem(
-		$primaryValue, array $updateFields, array $fieldValues
-	)
+	protected function UpdateItem($primaryValue, array $updateFields, array $fieldValues)
 	{
 		if (!Validation::CompareArrayLengths([$updateFields, $fieldValues])) {
 			return false;
@@ -206,7 +204,7 @@ abstract class AwsDynamoDB
 	 * @param array $fieldValues Fields value
 	 * @return mixed Returns status code after insert 200 - ok, 400 - error or FALSE
 	 */
-	public function AddItem($primaryValue, array $fields, array $fieldValues)
+	protected function AddItem($primaryValue, array $fields, array $fieldValues)
 	{
 		if (!Validation::CompareArrayLengths([$fields, $fieldValues])) {
 			return false;
