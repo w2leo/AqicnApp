@@ -32,8 +32,6 @@ enum UserDataReturnValues: string
 
 final class AwsUsersData extends AwsDynamoDB
 {
-
-
 	/**
 	 * Constructor for connecting to table UsersData
 	 */
@@ -76,13 +74,15 @@ final class AwsUsersData extends AwsDynamoDB
 	{
 		$status = false;
 		self::GetItem($login);
-		if (!isset($this->data) && !password_verify($password, $this->data['Password'])) {
-			unset($this->data);
-			return UserDataReturnValues::WrongCredentials;
-		}
-		self::RemoveRecoveryToken($login);
 
-		return self::CheckConfirmationToken($login) ? UserDataReturnValues::NotConfirmedEmail : UserDataReturnValues::Suscess;
+		$e1 = isset($this->data);
+		$e2 = password_verify($password, $this->data[UserDataFields::Password->name]['S']);
+		if (isset($this->data) && password_verify($password, $this->data[UserDataFields::Password->name]['S'])) {
+			self::RemoveRecoveryToken($login);
+			return self::CheckConfirmationToken($login) ? UserDataReturnValues::NotConfirmedEmail : UserDataReturnValues::Suscess;
+		}
+		unset($this->data);
+		return UserDataReturnValues::WrongCredentials;
 	}
 
 	private function CheckConfirmationToken($login)
@@ -180,6 +180,20 @@ final class AwsUsersData extends AwsDynamoDB
 			return true;
 		} else {
 			self::GetItem($this->data[$this->primaryField]);
+		}
+	}
+
+	public function GetEmail($login)
+	{
+		$userData = self::FindItems([$this->primaryField], [$login],['EQ']);
+		return $userData[0][UserDataFields::Email->name]['S'];
+	}
+
+	public function GetData($login)
+	{
+		if (isset($this->data) && $login == $this->data[$this->primaryField]['S'])
+		{
+			return $this->data;
 		}
 	}
 }

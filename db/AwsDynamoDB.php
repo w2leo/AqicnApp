@@ -26,11 +26,6 @@ abstract class AwsDynamoDB
 	protected $primaryField;
 	protected $data;
 
-	public function GetData()
-	{
-		return $this->data;
-	}
-
 	protected $connectionData;
 
 	protected function __construct()

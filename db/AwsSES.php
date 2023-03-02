@@ -68,11 +68,13 @@ class AwsSES
 			]);
 			$messageId = $result['MessageId'];
 			echo ("Email sent! Message ID: $messageId" . "\n");
+			return true;
 		} catch (AwsException $e) {
 			// output error message if fails
 			echo $e->getMessage();
 			echo ("The email was not sent. Error message: " . $e->getAwsErrorMessage() . "\n");
 			echo "\n";
+			return false;
 		}
 	}
 }
