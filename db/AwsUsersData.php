@@ -18,7 +18,8 @@ enum UserDataFields
 
 enum UserDataReturnValues: string
 {
-	case Suscess = 'Login sucsessfull';
+	case Sucsess = 'Sucsess';
+	case Fail = 'Failed';
 	case WrongCredentials = 'Login/password wrong';
 	case NotConfirmedEmail = 'Confirm email first';
 	case UserExists = 'User with such login&email exists';
@@ -61,11 +62,12 @@ final class AwsUsersData extends AwsDynamoDB
 	public function AddUser($login, $passwordHash, $email, $confirmationToken)
 	{
 		if (!self::CheckUserExists($login, $email)) {
-			return self::AddItem(
+			$result =  self::AddItem(
 				$login,
 				[UserDataFields::Email->name, UserDataFields::Password->name, UserDataFields::ConfirmationToken->name],
 				[$email, $passwordHash, $confirmationToken]
 			);
+			return $result == 200 ? UserDataReturnValues::Sucsess : UserDataReturnValues::Fail;
 		}
 		return UserDataReturnValues::UserExists;
 	}
@@ -79,7 +81,7 @@ final class AwsUsersData extends AwsDynamoDB
 		$e2 = password_verify($password, $this->data[UserDataFields::Password->name]['S']);
 		if (isset($this->data) && password_verify($password, $this->data[UserDataFields::Password->name]['S'])) {
 			self::RemoveRecoveryToken($login);
-			return self::CheckConfirmationToken($login) ? UserDataReturnValues::NotConfirmedEmail : UserDataReturnValues::Suscess;
+			return self::CheckConfirmationToken($login) ? UserDataReturnValues::NotConfirmedEmail : UserDataReturnValues::Sucsess;
 		}
 		unset($this->data);
 		return UserDataReturnValues::WrongCredentials;
