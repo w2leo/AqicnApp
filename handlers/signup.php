@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$passwordHash = password_hash($pass1, PASSWORD_DEFAULT);
 
 	$confirmationToken = bin2hex(random_bytes(40));
-	$result = $db->AddUser($login, $passwordHash, $ema, $confirmationToken);
+	$result = $db->AddUser($login, $passwordHash, $email, $confirmationToken);
 
 	if ($result == UserDataReturnValues::Sucsess) {
 		$msg = "<h1>Confirm registration on {$_SERVER['SERVER_NAME']}</h1>";
