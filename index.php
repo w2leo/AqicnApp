@@ -26,9 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST)) {
 }
 
 //debug info
-echo "<pre>GET:", print_r($_GET), "</pre>";
-echo "<pre>POST:", print_r($_POST), "</pre>";
-echo "<pre>SESSION:", print_r($_SESSION), "</pre>";
+// echo "<pre>GET:", print_r($_GET), "</pre>";
+// echo "<pre>POST:", print_r($_POST), "</pre>";
+// echo "<pre>SESSION:", print_r($_SESSION), "</pre>";
 
 //check message array and print it
 if (!empty($_SESSION['message'])) {
