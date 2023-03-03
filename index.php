@@ -57,7 +57,7 @@ if (isset($_GET['logout'])) {
 
 //Show private part if $_SESSION['username'] exists
 if (isset($_SESSION['username'])) {
-	include "views/_index.html";
+	include "views/main.html";
 
 
 } elseif (!isset($_GET['recovery']) && !isset($_GET['signup'])) {
