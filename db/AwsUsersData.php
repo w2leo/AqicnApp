@@ -61,7 +61,7 @@ final class AwsUsersData extends AwsDynamoDB
 
 	public function AddUser($login, $passwordHash, $email, $confirmationToken)
 	{
-		if (self::CheckUserExists($login, $email) == UserDataReturnValues::UserNotExists) {
+		if (self::CheckUserEmailExists($login, $email) == UserDataReturnValues::UserNotExists) {
 			$result = self::AddItem(
 				$login,
 				[UserDataFields::Email->name, UserDataFields::Password->name, UserDataFields::ConfirmationToken->name],
@@ -74,11 +74,7 @@ final class AwsUsersData extends AwsDynamoDB
 
 	public function Login($login, $password)
 	{
-		$status = false;
 		self::GetItem($login);
-
-		$e1 = isset($this->data);
-		$e2 = password_verify($password, $this->data[UserDataFields::Password->name]['S']);
 		if (isset($this->data) && password_verify($password, $this->data[UserDataFields::Password->name]['S'])) {
 			self::RemoveRecoveryToken($login);
 			return self::CheckConfirmationToken($login) ? UserDataReturnValues::NotConfirmedEmail : UserDataReturnValues::Sucsess;
@@ -89,7 +85,7 @@ final class AwsUsersData extends AwsDynamoDB
 
 	private function CheckConfirmationToken($login)
 	{
-		$userData = self::FindItems([$this->primaryField],[$login], ['EQ']);
+		$userData = self::FindItems([$this->primaryField], [$login], ['EQ']);
 		$result = isset($userData[0][UserDataFields::ConfirmationToken->name]);
 		return $result;
 	}
@@ -128,11 +124,7 @@ final class AwsUsersData extends AwsDynamoDB
 	{
 		if (isset($this->data[UserDataFields::RecoveryToken->name])) {
 			self::RemoveFields($login, [UserDataFields::RecoveryToken->name]);
-
-			//TODO
-			// Remove GetItem() and only in $this->data change value
 			self::GetItem($login);
-
 		}
 	}
 
@@ -144,7 +136,6 @@ final class AwsUsersData extends AwsDynamoDB
 			return UserDataReturnValues::PasswordChanded;
 		} else {
 			return UserDataReturnValues::WrongCredentials;
-
 		}
 	}
 
@@ -156,35 +147,57 @@ final class AwsUsersData extends AwsDynamoDB
 					$this->data[UserDataFields::Cities->name][] = $city;
 				}
 			} else {
-
-				$this->data[UserDataFields::Cities->name][] = $cities;
+				$this->data[UserDataFields::Cities->name]['SS'][] = $cities;
 			}
-			sort($this->data[UserDataFields::Cities->name]);
-			return self::UpdateUserData([UserDataFields::Cities->name], [$this->data[UserDataFields::Cities->name]]);
+			$newCityList = array_unique($this->data[UserDataFields::Cities->name]['SS']);
+			$res = self::UpdateItem(
+				$this->data[$this->primaryField]['S'],
+				[UserDataFields::Cities->name],
+				[$newCityList]
+			);
+
+			return $res == 200 ? UserDataReturnValues::Sucsess : UserDataReturnValues::Fail;
 		}
 		return false;
 	}
 
 	public function RemoveCity($city)
 	{
-		unset($array[array_search($city, $this->data[UserDataFields::Cities->name])]);
-		sort($this->data[UserDataFields::Cities->name]);
-		return self::UpdateUserData([UserDataFields::Cities->name], [$this->data[UserDataFields::Cities->name]]);
+		if (isset($this->data[UserDataFields::Cities->name])) {
+			$oldArray = $this->data[UserDataFields::Cities->name]['SS'];
+			$key = array_search($city, $oldArray);
+			unset($oldArray[$key]);
+			$newCityList = array_values($oldArray);
+
+			if (count($newCityList) > 0) {
+				$res = self::UpdateItem(
+					$this->data[$this->primaryField]['S'],
+					[UserDataFields::Cities->name],
+					[$newCityList]
+				);
+			} else {
+				$prv = $this->data[$this->primaryField]['S'];
+				$arrFields = [UserDataFields::Cities->name];
+				$res = self::RemoveFields($prv, $arrFields);
+			}
+			return $res == 200 ? UserDataReturnValues::Sucsess : UserDataReturnValues::Fail;
+		}
+		return false;
 	}
 
 	public function ChangeSubscription()
 	{
-		$this->data[UserDataFields::Subscription->name] = !$this->data[UserDataFields::Subscription->name];
-		return self::UpdateUserData([UserDataFields::Subscription->name], [$this->data[UserDataFields::Subscription->name]]);
-	}
-
-	private function UpdateUserData($fields, $values)
-	{
-		if (self::UpdateItem($this->data[$this->primaryField], $fields, $values)) {
-			return true;
+		if (isset($this->data[UserDataFields::Subscription->name])) {
+			$newValue = !$this->data[UserDataFields::Subscription->name]['B'];
 		} else {
-			self::GetItem($this->data[$this->primaryField]);
+			$newValue = true;
 		}
+		$res = self::UpdateItem(
+			$this->data[$this->primaryField]['S'],
+			[UserDataFields::Subscription->name],
+			[$newValue]
+		);
+		return $res == 200 ? UserDataReturnValues::Sucsess : UserDataReturnValues::Fail;
 	}
 
 	public function GetEmail($login)
@@ -195,10 +208,10 @@ final class AwsUsersData extends AwsDynamoDB
 
 	public function GetData($login)
 	{
-		if (isset($this->data) && $login == $this->data[$this->primaryField]['S']) {
-			self::GetItem($login);
-			return $this->data;
-		}
+		// if (isset($this->data) && $login == $this->data[$this->primaryField]['S']) {
+		self::GetItem($login);
+		return $this->data;
+		// }
 	}
 }
 

@@ -56,7 +56,7 @@ abstract class AwsDynamoDB
 	/**
 	 * Get and Save Item data into $data
 	 * @param string $primaryValue Value for Primary Key
-	 * @return mixed TRUE of Error code.
+	 * @return mixed Status code (200 ).
 	 */
 	protected function GetItem(string $primaryValue)
 	{
@@ -72,7 +72,7 @@ abstract class AwsDynamoDB
 
 			);
 			$this->data = $result['Item'];
-			return true;
+			return 200;
 		} catch (AwsException $e) {
 			unset($this->data);
 			return $e->getStatusCode();
@@ -162,13 +162,10 @@ abstract class AwsDynamoDB
 			return false;
 		}
 
-		$updateExpression = '';
+		$updateExpression = 'SET ';
+		$expressionAttributeValues = array();
 
 		foreach ($updateFields as $index => $item) {
-			if ($index == 0) {
-				$updateExpression .= 'SET ';
-				$expressionAttributeValues = array();
-			}
 			$updateExpression .= $item . ' = :f' . $index . ', ';
 			$expressionAttributeValues[':f' . $index] = $this->Format($fieldValues[$index]);
 		}
@@ -190,6 +187,7 @@ abstract class AwsDynamoDB
 			$this->data = $result['Attributes'];
 			return $this->GetStatusCode($result);
 		}
+		return false;
 	}
 
 	/**
@@ -232,7 +230,7 @@ abstract class AwsDynamoDB
 	 * @param array $primaryValue Primary value
 	 * @return mixed Returns deleted primary value of null
 	 */
-	public function DeleteItem($primaryValue)
+	protected function DeleteItem($primaryValue)
 	{
 		$result = $this->client->deleteItem(
 			array(

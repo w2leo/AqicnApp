@@ -77,6 +77,11 @@ if (isset($_SESSION['username'])) {
 	include "views/signup.html";
 }
 
+if (isset($_GET["main"]))
+{
+	include "handlers/main.php";
+}
+
 ?>
 
 <link rel="preconnect" href="https://fonts.gstatic.com">
