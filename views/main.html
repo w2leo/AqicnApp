@@ -173,30 +173,12 @@
 										<thead>
 											<tr>
 												<th>Name</th>
-												<th>Position</th>
-												<th>Office</th>
-												<th>Age</th>
-												<th>Start date</th>
-												<th>Action</th>
+												<th>description</th>
+												<th>price</th>
 											</tr>
 										</thead>
 										<tbody>
-											<tr>
-												<td>Michael Bruce</td>
-												<td>Javascript Developer</td>
-												<td>Singapore</td>
-												<td>29</td>
-												<td>2011/06/27</td>
-												<td><a href="/" class="delete-city">delete</a></td>
-											</tr>
-											<tr>
-												<td>Donna Snider</td>
-												<td>Customer Support</td>
-												<td>New York</td>
-												<td>27</td>
-												<td>2011/01/25</td>
-												<td><a href="/" class="delete-city">delete</a></td>
-											</tr>
+											<!-- will be filled by js script -->
 										</tbody>
 									</table>
 								</div>
@@ -295,6 +277,40 @@
 				});
 			}
 		</script>
+
+		<script>
+			function getData() {
+				console.log("Table fill started");
+
+				var xhr = new XMLHttpRequest();
+				var url = "?main=fill";
+				xhr.open("GET", url, true);
+				xhr.onreadystatechange = function () {
+					if (xhr.readyState === 4 && xhr.status === 200) {
+						var data = JSON.parse(xhr.responseText);
+						var tableBody = document
+							.getElementById("dataTable")
+							.getElementsByTagName("tbody")[0];
+						for (var i = 0; i < data.length; i++) {
+							var item = data[i];
+							console.log("Item = " + item);
+							var row = tableBody.insertRow();
+							row.insertCell(0).innerHTML = item.name;
+							row.insertCell(1).innerHTML = item.description;
+							row.insertCell(2).innerHTML = item.price;
+							// <td><a href="/" class="delete-city">delete</a></td>
+						}
+					}
+				};
+				xhr.send();
+			}
+		</script>
+		<script>
+			window.onload = function () {
+				getData();
+			};
+		</script>
+
 		<!-- Bootstrap core JavaScript-->
 		<script src="../vendor/jquery/jquery.min.js"></script>
 		<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
