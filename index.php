@@ -24,8 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST)) {
 	$requestHandler->HandlePOST(array_keys($_POST));
 }
 
-//Temp info
-//check message array and print it
+//Log to console;
 if (!empty($_SESSION['message'])) {
 	foreach ($_SESSION['message'] as $value) {
 		console_log('$_Session[message] = $value'.PHP_EOL);
