@@ -34,7 +34,7 @@ class RequestHandler
 					include "handlers/logout.php";
 					return;
 				case GetKeys::RECOVERY->value: // +
-					include "views/recovery.html";
+					include "views/recovery.php";
 					return;
 				case GetKeys::SIGNUP->value:
 					include "views/signup.html";

@@ -2,17 +2,22 @@
 
 require_once('db/AwsUsersData.php');
 require_once('db/udf.php');
-
+require_once('aqicnApi/aqicn_api.php');
 
 if (isset($_GET["main"]) && $_GET["main"] == 'fill') {
 	// $db = new AwsUsersData();
 	$cities = $_SESSION['userData'][UserDataFields::Cities->name]['SS'];
 
+	$aqi = new AqiCn();
+
 	$items = array();
 	foreach ($cities as $item) {
+
+		$airData = $aqi->GetCityData($item)['aqi'];
+
 		$items[] = array(
 			'city' => $item,
-			'airData' => random_int(0, 100),
+			'airData' => $airData,
 		);
 	}
 

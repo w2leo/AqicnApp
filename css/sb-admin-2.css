@@ -10861,7 +10861,7 @@ a:focus {
 }
 
 .bg-login-image {
-  background: url("https://source.unsplash.com/K4mSJ7kc0As/600x800");
+  background: url("../img/login.jpeg");
   background-position: center;
   background-size: cover;
 }
@@ -10876,6 +10876,12 @@ a:focus {
   background: url("https://source.unsplash.com/oWTW-jNGl9I/600x800");
   background-position: center;
   background-size: cover;
+}
+
+.bg-main-image {
+	background: url("../img/main_back.png");
+	background-position: center;
+	background-size: cover;
 }
 
 form.user .custom-checkbox.small label {

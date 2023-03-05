@@ -12102,21 +12102,33 @@ a:focus {
 }
 
 .bg-login-image {
-	background: url(https://source.unsplash.com/K4mSJ7kc0As/600x800);
+	background: url("../img/login.jpeg");
 	background-position: center;
 	background-size: cover
 }
 
 .bg-register-image {
-	background: url(https://source.unsplash.com/Mv9hjnEUHR4/600x800);
+	background: url("../img/signup.jpg");
 	background-position: center;
 	background-size: cover
 }
 
 .bg-password-image {
-	background: url(https://source.unsplash.com/oWTW-jNGl9I/600x800);
+	background: url("../img/forget_password.jpg");
 	background-position: center;
 	background-size: cover
+}
+
+.bg-set-password-image {
+	background: url("../img/set_new_password.jpg");
+	background-position: center;
+	background-size: cover
+}
+
+.bg-main-image {
+	background: url("../img/main_back.png");
+	background-position: center;
+	background-size: cover;
 }
 
 form.user .custom-checkbox.small label {

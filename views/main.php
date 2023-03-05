@@ -62,7 +62,7 @@
 								/>
 								<div class="input-group-append">
 									<button class="btn btn-success" type="submit">
-										<i class="fas fa-search fa-sm"></i>
+										<i class="fas fa-save fa-sm"></i>
 									</button>
 								</div>
 							</div>
@@ -103,8 +103,8 @@
 												name="add_city"
 											/>
 											<div class="input-group-append">
-												<button class="btn btn-" type="submit">
-													<i class="fas fa-search fa-sm"></i>
+												<button class="btn btn-success" type="submit">
+													<i class="fas fa-save fa-sm"></i>
 												</button>
 											</div>
 										</div>
