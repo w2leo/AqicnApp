@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST)) {
 //Log to console;
 if (!empty($_SESSION['message'])) {
 	foreach ($_SESSION['message'] as $value) {
-		console_log('$_Session[message] = $value' . PHP_EOL);
+		echo('$_Session[message] = $value' . PHP_EOL);
 	}
 	unset($_SESSION['message']);
 }
@@ -36,14 +36,5 @@ if (!empty($_SESSION['message'])) {
 if (!isset($_GET) && !isset($_POST))
 	$requestHandler->DefaultPage();
 
-
-function console_log($data)
-{ // сама функция
-	if (is_array($data) || is_object($data)) {
-		echo ("<script>console.log('php_array: " . json_encode($data) . "');</script>");
-	} else {
-		echo ("<script>console.log('php_string: " . $data . "');</script>");
-	}
-}
 
 ?>
