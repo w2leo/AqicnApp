@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		FILTER_VALIDATE_EMAIL
 	);
 
-	$login = Validation::CheckInput($_POST['newLogin'] ?? '') ? $_POST['login'] : '';
+	$login = Validation::CheckInput($_POST['newLogin'] ?? '') ? $_POST['newLogin'] : '';
 	$pass1 = Validation::CheckInput($_POST['password'] ?? '') ? $_POST['password'] : '';
 	$pass2 = Validation::CheckInput($_POST['confirmPassword'] ?? '') ? $_POST['confirmPassword'] : '';
 
