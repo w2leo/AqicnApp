@@ -6,13 +6,19 @@ require_once('db/AwsUsersData.php');
 require_once('db/udf.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	$login = Validation::CheckInput($_POST['login'] ?? '') ? $_POST['login'] : '';
+	$login = Validation::CheckInput($_POST['recovery'] ?? '') ? $_POST['recovery'] : '';
+
+	if ($login=='') {
+		ExitPage('Incorrect login');
+	}
 	$db = new AwsUsersData();
 
 	$result = $db->CheckUserExists($login);
+
 	if ($result == UserDataReturnValues::UserExists) {
 		$recovery_token = bin2hex(random_bytes(40));
 		$result = $db->AddRecoveryToken($login, $recovery_token);
+
 		if ($result != UserDataReturnValues::NotConfirmedEmail) {
 			$email = $db->GetEmail($login);
 			$msg = "Password recovery at {$_SERVER['SERVER_NAME']}";

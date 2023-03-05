@@ -43,15 +43,15 @@
                                         <p class="mb-4"> Enter your login below
                                             to receive a link to reset your password!</p>
                                     </div>
-                                    <form class="user" action="?recovery" method="post">
+                                    <form class="user" action="/" method="post">
                                         <div class="form-group">
-                                            <input type="text" class="form-control form-control-user" name="login"
+                                            <input type="text" class="form-control form-control-user" name="recovery"
                                                 id="inputLogin" placeholder="Enter login...">
                                         </div>
                                         <input class="btn btn-user btn-block btn-success" type="submit" value="Reset Password">
 										<hr>
 										<div class="text-center">
-											<button class="btn btn-primary btn-user btn-block" href="?">Back to login page</button>
+											<button class="btn btn-primary btn-user btn-block" formaction="/" method="GET">Back to login page</button>
 										</div>
 									</form>
 

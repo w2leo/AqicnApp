@@ -48,17 +48,17 @@
 						<!-- Topbar Search -->
 						<form
 							class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
-							action="?main=add"
+							action="/"
 							method="post"
 						>
 							<div class="input-group">
 								<input
 									type="text"
 									class="form-control bg-light border-0 small"
-									placeholder="Search for..."
+									placeholder="Add city"
 									aria-label="Search"
 									aria-describedby="basic-addon2"
-									name="city"
+									name="add_city"
 								/>
 								<div class="input-group-append">
 									<button class="btn btn-success" type="submit">
@@ -88,17 +88,22 @@
 									class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
 									aria-labelledby="searchDropdown"
 								>
-									<form class="form-inline mr-auto w-100 navbar">
+									<form
+										class="form-inline mr-auto w-100 navbar"
+										action="/"
+										method="post"
+									>
 										<div class="input-group">
 											<input
 												type="text"
 												class="form-control bg-light border-0 small"
-												placeholder="Search for..."
+												placeholder="Add city"
 												aria-label="Search"
 												aria-describedby="basic-addon2"
+												name="add_city"
 											/>
 											<div class="input-group-append">
-												<button class="btn btn-primary" type="button">
+												<button class="btn btn-" type="submit">
 													<i class="fas fa-search fa-sm"></i>
 												</button>
 											</div>
@@ -119,7 +124,7 @@
 									aria-expanded="false"
 								>
 									<span class="mr-2 d-none d-lg-inline text-gray-600 small"
-										>Douglas McGee</span
+										><?php if(isset($_SESSION['username'])) echo $_SESSION['username'];   ?> </span
 									>
 									<img
 										class="img-profile rounded-circle"
@@ -166,9 +171,9 @@
 								<div class="table-responsive">
 									<table
 										class="table table-bordered"
-										id="dataTable"
 										width="100%"
 										cellspacing="0"
+										id="airTable"
 									>
 										<thead>
 											<tr>
@@ -247,80 +252,72 @@
 			</div>
 		</div>
 
-		<!-- Delete city script -->
-		<script>
-			console.log("Script started");
-			var deleteLinks = document.querySelectorAll(".delete-city");
-			for (var i = 0; i < deleteLinks.length; i++) {
-				deleteLinks[i].addEventListener("click", function (event) {
-					// Prevent the link from opening the href URL
-					event.preventDefault();
-
-					// Get the value of the "KeyField" cell in the same row
-					var keyFieldValue =
-						this.parentNode.parentNode.querySelector(
-							"td:first-child"
-						).textContent;
-
-					var xhr = new XMLHttpRequest();
-					xhr.open("POST", "?main=delete");
-					var formData = new FormData();
-
-					formData.append("city", keyFieldValue);
-					xhr.send(formData);
-
-					xhr.onreadystatechange = function () {
-						if (this.readyState == 4 && this.status == 200) {
-							console.log("Script executed successfully");
-						}
-					};
-				});
-			}
-		</script>
-
 		<script>
 			function getData() {
-				debugger;
 				console.log("Table fill started");
 				var xhr = new XMLHttpRequest();
 				var url = "/?main=fill";
 				xhr.open("GET", url, true);
 				xhr.onreadystatechange = function () {
 					if (xhr.readyState === 4 && xhr.status === 200) {
-						debugger;
-						console.log(xhr.responseText);
-						var index = xhr.responseText.search("JSON_TABLE");
-						var request = xhr.responseText.split("JSON_TABLE")
+						var request = xhr.responseText.split("JSON_TABLE");
 						var json = request[1];
 						var data = JSON.parse(json);
 						var tableBody = document
-							.getElementById("dataTable")
+							.getElementById("airTable")
 							.getElementsByTagName("tbody")[0];
 						tableBody.innerHTML = "";
-
-
 
 						for (var i = 0; i < data.length; i++) {
 							var item = data[i];
 							var row = tableBody.insertRow();
 							row.insertCell(0).innerHTML = item.city;
 							row.insertCell(1).innerHTML = item.airData;
-							row.insertCell(2).innerHTML= "<a href=\"/\" class=\"delete-city\">delete</a>";
+							row.insertCell(2).innerHTML =
+								'<a href="#" class="delete-city">delete</button>';
 						}
 					}
 				};
 				xhr.send();
-				// xhr.onreadystatechange = function () {
-				// 		if (this.readyState == 4 && this.status == 200) {
-				// 			console.log("Table filled successfully");
-				// 		}
-				// 	};
 			}
 		</script>
+
 		<script>
-			window.onload = function () {
+			// window.onload = function () {
+			// 	getData();
+			// };
+			window.onpageshow = function () {
 				getData();
-			};
+			}
+		</script>
+
+		<!-- Delete city script -->
+		<script>
+			document.body.addEventListener("click", function (event) {
+				if (event.target.classList.contains("delete-city")) {
+					event.preventDefault();
+
+					var keyFieldValue =
+						event.target.parentNode.parentNode.querySelector(
+							"td:first-child"
+						).textContent;
+
+					var formData = new FormData();
+					formData.append("remove_city", keyFieldValue);
+
+					fetch("/", {
+						method: "POST",
+						body: formData
+					}).then(function (response) {
+						if (response.status === 200) {
+							console.log("Request successful");
+							getData();
+						} else {
+							console.error("Request failed");
+						}
+					});
+				}
+			});
 		</script>
 
 		<!-- Bootstrap core JavaScript-->

@@ -1,46 +1,51 @@
 <?php
 require_once('handlers/GetPostEnum.php');
+require_once('db/udf.php');
 
 class RequestHandler
 {
+	private function DefaultPage()
+	{
+		if (isset($_SESSION['username'])) {
+			include "views/main.php";
+		} else {
+			include "views/login.html";
+		}
+	}
 	public function HandleGET($keys)
 	{
 		if (count($keys) == 0) {
-			include "views/login.html";
+			$this->DefaultPage();
 		}
 
 		foreach ($keys as $key) {
 			switch ($key) {
 				case GetKeys::CONFIRMATION_TOKEN->value:
 					include "handlers/confirmation_token.php";
-					break;
+					return;
 				case GetKeys::RECOVERY_TOKEN->value:
 					include "handlers/recovery_token.php"; // get and post
-					break;
+					return;
 				case GetKeys::MAIN->value:
 					include "handlers/main.php";
 					//return;
-					break;
+					return;
 				case GetKeys::LOGOUT->value:
 					include "handlers/logout.php";
-					break;
-				case GetKeys::RECOVERY->value:
-					include "handlers/recovery.php"; // into post
+					return;
+				case GetKeys::RECOVERY->value: // +
 					include "views/recovery.html";
-					break;
+					return;
 				case GetKeys::SIGNUP->value:
-					include "handlers/signup.php"; // into post
 					include "views/signup.html";
-					break;
-				default:
-					if (isset($_SESSION['username'])) {
-						include "views/main.html";
-					} else {
-						include "views/login.html";
-					}
-					break;
+					return;
+				// default:
+				// 	$this->DefaultPage();
+				// 	break;
 			}
 		}
+		// $this->DefaultPage();
+
 	}
 
 	public function HandlePOST($keys)
@@ -69,6 +74,7 @@ class RequestHandler
 					include "views/login.html";
 			}
 		}
+		ExitPage('');
 	}
 
 }

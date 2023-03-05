@@ -13,7 +13,7 @@ session_start();
 $_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
 $requestHandler = new RequestHandler();
 
-//check and validate GET and POST requests
+//Check and validate GET and POST requests
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET)) {
 	Validation::ValidateArray($_GET);
 	$requestHandler->HandleGET(array_keys($_GET));

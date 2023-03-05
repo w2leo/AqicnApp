@@ -155,7 +155,7 @@ final class AwsUsersData extends AwsDynamoDB
 				[UserDataFields::Cities->name],
 				[$newCityList]
 			);
-
+			$this->UpdateSessionData();
 			return $res == 200 ? UserDataReturnValues::Sucsess : UserDataReturnValues::Fail;
 		}
 		return false;
@@ -180,6 +180,7 @@ final class AwsUsersData extends AwsDynamoDB
 				$arrFields = [UserDataFields::Cities->name];
 				$res = self::RemoveFields($prv, $arrFields);
 			}
+			$this->UpdateSessionData();
 			return $res == 200 ? UserDataReturnValues::Sucsess : UserDataReturnValues::Fail;
 		}
 		return false;
@@ -200,6 +201,11 @@ final class AwsUsersData extends AwsDynamoDB
 		return $res == 200 ? UserDataReturnValues::Sucsess : UserDataReturnValues::Fail;
 	}
 
+	private function UpdateSessionData()
+	{
+		$_SESSION['userData'] = $this->data;
+	}
+
 	public function GetEmail($login)
 	{
 		$userData = self::FindItems([$this->primaryField], [$login], ['EQ']);
@@ -208,10 +214,8 @@ final class AwsUsersData extends AwsDynamoDB
 
 	public function GetData($login)
 	{
-		// if (isset($this->data) && $login == $this->data[$this->primaryField]['S']) {
 		self::GetItem($login);
 		return $this->data;
-		// }
 	}
 }
 
