@@ -20,7 +20,7 @@ if (isset($_GET["main"]) && $_GET["main"] == 'fill') {
 	echo 'JSON_TABLE' . json_encode($items) . 'JSON_TABLE';
 }
 
-if (isset($_POST["city"])) {
+if (isset($_POST["city"]) && isset($_GET["main"])) {
 
 	$city = $_POST['city'];
 	$db = new AwsUsersData();
