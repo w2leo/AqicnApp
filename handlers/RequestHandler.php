@@ -4,7 +4,7 @@ require_once('db/udf.php');
 
 class RequestHandler
 {
-	private function DefaultPage()
+	public function DefaultPage()
 	{
 		if (isset($_SESSION['username'])) {
 			include "views/main.php";

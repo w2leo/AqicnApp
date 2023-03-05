@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST)) {
 	$requestHandler->HandlePOST(array_keys($_POST));
 }
 
+
 //Log to console;
 if (!empty($_SESSION['message'])) {
 	foreach ($_SESSION['message'] as $value) {
@@ -31,6 +32,10 @@ if (!empty($_SESSION['message'])) {
 	}
 	unset($_SESSION['message']);
 }
+
+if (!isset($_GET) && !isset($_POST))
+$requestHandler->DefaultPage();
+
 
 function console_log($data){ // сама функция
     if(is_array($data) || is_object($data)){
