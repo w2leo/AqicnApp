@@ -49,13 +49,15 @@
 										<input class="btn btn-user btn-block btn-success" type="submit"
 											value="Reset Password" />
 										<hr />
+									</form>
+									<form class="user" action="/" method="get">
 										<div class="text-center">
-											<button class="btn btn-primary btn-user btn-block" formaction="/"
-												method="GET">
+											<button class="btn btn-user btn-primary btn-block" type="submit">
 												Back to login page
 											</button>
 										</div>
 									</form>
+
 								</div>
 							</div>
 						</div>

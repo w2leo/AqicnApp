@@ -23,7 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	// $_SESSION['field_email'][]=$email;
 	// $_SESSION['field_login'][]=$login;
 
+
 	$_SESSION['message'] = [];
+
+	if($login=='')
+	{
+		ExitPage('Incorrect login');
+	}
 	if (!$email) {
 		ExitPage('Incorrect email');
 	}

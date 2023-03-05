@@ -9,7 +9,7 @@ class RequestHandler
 		if (isset($_SESSION['username'])) {
 			include "views/main.php";
 		} else {
-			include "views/login.html";
+			include "views/login.php";
 		}
 	}
 	public function HandleGET($keys)
@@ -39,12 +39,8 @@ class RequestHandler
 				case GetKeys::SIGNUP->value:
 					include "views/signup.html";
 					return;
-				// default:
-				// 	$this->DefaultPage();
-				// 	break;
 			}
 		}
-		// $this->DefaultPage();
 
 	}
 
@@ -70,8 +66,6 @@ class RequestHandler
 				case PostKeys::REMOVE_CITY->value:
 					include "handlers/main.php";
 					break;
-				default:
-					include "views/login.html";
 			}
 		}
 		ExitPage('');
