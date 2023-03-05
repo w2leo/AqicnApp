@@ -5,7 +5,6 @@ require_once('db/AwsSES.php');
 require_once('db/AwsUsersData.php');
 require_once('db/udf.php');
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$login = Validation::CheckInput($_POST['login'] ?? '') ? $_POST['login'] : '';
 	$db = new AwsUsersData();

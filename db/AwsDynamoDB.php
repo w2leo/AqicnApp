@@ -1,7 +1,6 @@
 <?php
 
 require_once $_SESSION['config']['vendor_dir'] . '/vendor/autoload.php';
-require_once('db/AwsDynamoDB.php');
 require_once('db/Validation.php');
 
 use Aws\DynamoDb\DynamoDbClient;
@@ -143,7 +142,7 @@ abstract class AwsDynamoDB
 			)
 		);
 
-		if (isset($result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)])) {
+		if (isset($result['Attributes'][$this->primaryField][$this->GetAwsType($primaryValue)])) {
 			$this->data = $result['Attributes'];
 			return $this->GetStatusCode($result);
 		}
@@ -183,7 +182,7 @@ abstract class AwsDynamoDB
 			)
 		);
 
-		if (isset($result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)])) {
+		if (isset($result['Attributes'][$this->primaryField][$this->GetAwsType($primaryValue)])) {
 			$this->data = $result['Attributes'];
 			return $this->GetStatusCode($result);
 		}
@@ -242,18 +241,32 @@ abstract class AwsDynamoDB
 			)
 		);
 
-		if (isset($result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)]))
-			return $result['Attributes'][$this->primaryField][Validation::GetAwsType($primaryValue)];
+		if (isset($result['Attributes'][$this->primaryField][$this->GetAwsType($primaryValue)]))
+			return $result['Attributes'][$this->primaryField][$this->GetAwsType($primaryValue)];
 	}
 
 	protected function Format($value)
 	{
-		return array(Validation::GetAwsType($value) => $value);
+		return array($this->GetAwsType($value) => $value);
 	}
 
 	protected function GetStatusCode($result)
 	{
 		return $result->get('@metadata')['statusCode'];
+	}
+
+	protected function GetAwsType($value): string
+	{
+		switch (substr(gettype($value), 0, 1)) {
+			case 'i':
+				return 'N';
+			case 'b':
+				return 'BOOL';
+			case 'a':
+				return 'SS';
+			default:
+				return 'S';
+		}
 	}
 }
 

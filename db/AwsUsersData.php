@@ -1,7 +1,7 @@
 <?php
 
 require_once $_SESSION['config']['vendor_dir'] . '/vendor/autoload.php';
-require_once('db/AwsDynamoDB.php');
+require_once('AwsDynamoDB.php');
 
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\Exception\AwsException;

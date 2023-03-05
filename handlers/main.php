@@ -1,49 +1,34 @@
 <?php
 
 require_once('db/AwsUsersData.php');
+require_once('db/udf.php');
 
 
-if (isset($_GET["main"]) && $_GET["main"]=='fill')
-{
-	$items = array(
-		array('name' => 'Item 1', 'description' => 'Description 1', 'price' => '$10'),
-		array('name' => 'Item 2', 'description' => 'Description 2', 'price' => '$20'),
-		array('name' => 'Item 3', 'description' => 'Description 3', 'price' => '$30')
-	  );
+if (isset($_GET["main"]) && $_GET["main"] == 'fill') {
+	$cities = $_SESSION['userData'][UserDataFields::Cities->name]['SS'];
+	$deleteFiled = '<a href="/" class="delete-city">delete</a>';
 
-	//   add <a href="/" class="delete-city">delete</a>
+	$items = array();
+	foreach ($cities as $item) {
+		$items[] = array(
+			'city' => $item,
+			'airData' => random_int(0, 100),
+			'deleteField' => $deleteFiled
+		);
+	}
 
-	  // encode the data as a JSON string and return it
-	  echo json_encode($items);
+	echo 'JSON_TABLE' . json_encode($items) . 'JSON_TABLE';
 }
 
-
-if (isset($_GET["main"]) && isset($_POST["city"])) {
+if (isset($_POST["city"])) {
 
 	$city = $_POST['city'];
 	$db = new AwsUsersData();
 	$db->GetData($_SESSION["username"]);
-	$_GET["main"] == 'add' ? $db->AddCity($city) : $db->RemoveCity($city);
-	FillTable($db->GetData($_SESSION['username']));
+	$result = $_GET["main"] == 'add' ? $db->AddCity($city) : $db->RemoveCity($city);
+	$_SESSION['userData'] = $db->GetData($_SESSION["username"]);
+	ExitPage($result->value);
 }
 
 
-
-
-function FillTable()
-{
-	$data = $_SESSION['userData']['Cities'];
-	$table_html = '';
-	foreach ($data as $item) {
-		$table_html .= '<tr>';
-		$table_html .= '<td>' . $item[0] . '</td>';
-		$table_html .= '<td>' . $item[1] . '</td>';
-		$table_html .= '<td>' . $item[2] . '</td>';
-		$table_html .= '</tr>';
-	}
-
-	// end the table HTML code and output it
-	$table_html .= '</table>';
-	echo $table_html;
-}
 ?>

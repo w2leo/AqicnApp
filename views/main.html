@@ -172,9 +172,9 @@
 									>
 										<thead>
 											<tr>
-												<th>Name</th>
-												<th>description</th>
-												<th>price</th>
+												<th>City</th>
+												<th>Air Pollution</th>
+												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -280,29 +280,41 @@
 
 		<script>
 			function getData() {
+				debugger;
 				console.log("Table fill started");
-
 				var xhr = new XMLHttpRequest();
-				var url = "?main=fill";
+				var url = "/?main=fill";
 				xhr.open("GET", url, true);
 				xhr.onreadystatechange = function () {
 					if (xhr.readyState === 4 && xhr.status === 200) {
-						var data = JSON.parse(xhr.responseText);
+						debugger;
+						console.log(xhr.responseText);
+						var index = xhr.responseText.search("JSON_TABLE");
+						var request = xhr.responseText.split("JSON_TABLE")
+						var json = request[1];
+						var data = JSON.parse(json);
 						var tableBody = document
 							.getElementById("dataTable")
 							.getElementsByTagName("tbody")[0];
+						tableBody.innerHTML = "";
+
+
+
 						for (var i = 0; i < data.length; i++) {
 							var item = data[i];
-							console.log("Item = " + item);
 							var row = tableBody.insertRow();
-							row.insertCell(0).innerHTML = item.name;
-							row.insertCell(1).innerHTML = item.description;
-							row.insertCell(2).innerHTML = item.price;
-							// <td><a href="/" class="delete-city">delete</a></td>
+							row.insertCell(0).innerHTML = item.city;
+							row.insertCell(1).innerHTML = item.airData;
+							row.insertCell(2).innerHTML= "<a href=\"/\" class=\"delete-city\">delete</a>";
 						}
 					}
 				};
 				xhr.send();
+				// xhr.onreadystatechange = function () {
+				// 		if (this.readyState == 4 && this.status == 200) {
+				// 			console.log("Table filled successfully");
+				// 		}
+				// 	};
 			}
 		</script>
 		<script>

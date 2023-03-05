@@ -2,6 +2,7 @@
 //error_reporting(E_ERROR | E_PARSE);
 
 require_once('db/Validation.php');
+require_once('handlers/RequestHandler.php');
 
 //enable input bufferization
 ob_start();
@@ -10,85 +11,34 @@ session_start();
 
 // init session from config.ini file
 $_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
+$requestHandler = new RequestHandler();
 
 //check and validate GET and POST requests
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET)) {
-	foreach ($_GET as $key => $value) {
-		$_GET[$key] = Validation::Validate($_GET[$key]);
-	}
+	Validation::ValidateArray($_GET);
+	$requestHandler->HandleGET(array_keys($_GET));
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST)) {
-	foreach ($_POST as $key => $value) {
-		$_POST[$key] = Validation::Validate($value);
-	}
+	Validation::ValidateArray($_POST);
+	$requestHandler->HandlePOST(array_keys($_POST));
 }
 
-//debug info
-// echo "<pre>GET:", print_r($_GET), "</pre>";
-// echo "<pre>POST:", print_r($_POST), "</pre>";
-// echo "<pre>SESSION:", print_r($_SESSION), "</pre>";
-
+//Temp info
 //check message array and print it
 if (!empty($_SESSION['message'])) {
 	foreach ($_SESSION['message'] as $value) {
-		echo <<<MESSAGE
-<div>{$value}</div>
-MESSAGE;
+		console_log('$_Session[message] = $value'.PHP_EOL);
 	}
 	unset($_SESSION['message']);
-
 }
 
-//confirm email - check link click
-if (!empty(isset($_GET['confirmation_token']))) {
-	include "handlers/confirmation_token.php";
-}
-
-//password recovery link
-if (isset($_GET['recovery_token'])) {
-	include "handlers/recovery_token.php";
-}
-
-//handle end session
-if (isset($_GET['logout'])) {
-	include "handlers/logout.php";
-}
-
-//Show private part if $_SESSION['username'] exists
-if (isset($_SESSION['username'])) {
-	include "views/main.html";
-
-
-} elseif (!isset($_GET['recovery']) && !isset($_GET['signup'])) {
-
-	//handle login
-	include "handlers/login.php";
-	include "views/login.html";
-} elseif (isset($_GET['recovery'])) {
-
-	//handle password recovery
-	include "handlers/recovery.php";
-	include "views/recovery.html";
-} elseif (isset($_GET['signup'])) {
-
-	//signup form
-	include "handlers/signup.php";
-	include "views/signup.html";
-}
-
-if (isset($_GET["main"]))
-{
-	include "handlers/main.php";
+function console_log($data){ // сама функция
+    if(is_array($data) || is_object($data)){
+		echo("<script>console.log('php_array: ".json_encode($data)."');</script>");
+	} else {
+		echo("<script>console.log('php_string: ".$data."');</script>");
+	}
 }
 
 ?>
-
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Ubuntu+Condensed&display=swap" rel="stylesheet">
-<style>
-	* {
-		font-family: 'Ubuntu Condensed', sans-serif;
-	}
-
-</style>

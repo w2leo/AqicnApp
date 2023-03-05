@@ -1,6 +1,7 @@
 <?php
 
-class Validation {
+class Validation
+{
 
 	static function Validate($data)
 	{
@@ -22,26 +23,17 @@ class Validation {
 			if ($index == 0)
 				continue;
 
-			if (count($item) != count($arrays[$index-1]))
-			{
+			if (count($item) != count($arrays[$index - 1])) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	static function GetAwsType($value): string
+	static function ValidateArray(array &$in)
 	{
-		switch (substr(gettype($value),0,1)) {
-			case 'i':
-				return 'N';
-			case 'b':
-				return 'BOOL';
-			case 'a':
-				return 'SS';
-			//implement Binary Later
-			default:
-				return 'S';
+		foreach ($in as $key => $value) {
+			$in[$key] = Validation::Validate($in[$key]);
 		}
 	}
 
