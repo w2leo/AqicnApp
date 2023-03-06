@@ -20,10 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$pass1 = Validation::CheckInput($_POST['password'] ?? '') ? $_POST['password'] : '';
 	$pass2 = Validation::CheckInput($_POST['confirmPassword'] ?? '') ? $_POST['confirmPassword'] : '';
 
-	// $_SESSION['field_email'][]=$email;
-	// $_SESSION['field_login'][]=$login;
-
-
 	$_SESSION['message'] = [];
 
 	if($login=='')

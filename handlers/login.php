@@ -15,7 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	$_SESSION['message'] = [];
 
-	//TODO refactor later
 	if (!$login) {
 		ExitPage('Set valid login');
 	}
