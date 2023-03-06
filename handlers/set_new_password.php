@@ -23,3 +23,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$result = $db->ChangePassword($login, $passwordHash, $recovery_token);
 	ExitPage($result->value);
 }
+
+?>
