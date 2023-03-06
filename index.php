@@ -28,7 +28,7 @@ try {
 		Validation::ValidateArray($_POST);
 		$requestHandler->HandlePOST(array_keys($_POST));
 	}
-} catch (Exception $e) {
+} catch (Error $e) {
 	ExitPage('');
 }
 
