@@ -1,4 +1,5 @@
 <?php
+
 enum GetKeys: string
 {
 	case CONFIRMATION_TOKEN = 'confirmation_token';

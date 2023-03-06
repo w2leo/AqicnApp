@@ -22,8 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	$_SESSION['message'] = [];
 
-	if($login=='')
-	{
+	if ($login == '') {
 		ExitPage('Incorrect login');
 	}
 	if (!$email) {
@@ -40,8 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$result = $db->AddUser($login, $passwordHash, $email, $confirmationToken);
 
 	if ($result == UserDataReturnValues::Sucsess) {
-		$msg = "<h1>Confirm registration on {$_SERVER['SERVER_NAME']}</h1>";
-		$msg .= "Click on  <a href=\"http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}?login=" . $login . "&confirmation_token=" . $confirmationToken . "\">link</a> to confirm email";
+		$msg = "<h3>Confirm registration on {$_SERVER['SERVER_NAME']}</h3>";
+		$msg .= "<p>Click on  <a href=\"http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}?login=" . $login;
+		$msg .= "&confirmation_token=" . $confirmationToken . "\">link</a> to confirm email</p>";
 		$mail = new AwsSES();
 		$mail->SendEmail($email, $msg);
 	}

@@ -17,14 +17,14 @@ if (isset($_GET['recovery_token']) && isset($_GET['login'])) {
 			$_SESSION['recovery_token'] = $recovery_token;
 			unset($_GET["recovery_token"]);
 			unset($_GET["login"]);
-			include "views/set_new_password.html";
+			include "views/set_new_password.php";
 			exit;
 		} else {
 			ExitPage($result->value);
 		}
-	}
-	else
-	{
+	} else {
 		include "handlers/set_new_password.php";
 	}
 }
+
+?>

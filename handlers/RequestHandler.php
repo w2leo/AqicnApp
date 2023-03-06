@@ -1,4 +1,5 @@
 <?php
+
 require_once('handlers/GetPostEnum.php');
 require_once('db/udf.php');
 
@@ -24,20 +25,19 @@ class RequestHandler
 					include "handlers/confirmation_token.php";
 					return;
 				case GetKeys::RECOVERY_TOKEN->value:
-					include "handlers/recovery_token.php"; // get and post
+					include "handlers/recovery_token.php";
 					return;
 				case GetKeys::MAIN->value:
 					include "handlers/main.php";
-					//return;
 					return;
 				case GetKeys::LOGOUT->value:
 					include "handlers/logout.php";
 					return;
-				case GetKeys::RECOVERY->value: // +
+				case GetKeys::RECOVERY->value:
 					include "views/recovery.php";
 					return;
 				case GetKeys::SIGNUP->value:
-					include "views/signup.html";
+					include "views/signup.php";
 					return;
 			}
 		}
@@ -72,4 +72,5 @@ class RequestHandler
 	}
 
 }
+
 ?>

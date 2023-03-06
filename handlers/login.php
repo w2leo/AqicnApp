@@ -1,8 +1,8 @@
 <?php
+
 require_once('db/Validation.php');
 require_once('db/AwsUsersData.php');
 require_once('db/udf.php');
-
 
 $email = '';
 $password1 = '';
@@ -31,3 +31,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	ExitPage($result->value);
 }
+ ?>

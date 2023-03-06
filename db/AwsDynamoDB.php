@@ -79,7 +79,7 @@ abstract class AwsDynamoDB
 	}
 
 	/**
-	 *
+	 * Search items using params
 	 * @param array $fields Fields for searching
 	 * @param array $fieldValues Fields value
 	 * @param array $compareOperators Comprasion operators for each field
@@ -91,7 +91,6 @@ abstract class AwsDynamoDB
 			return false;
 		}
 
-		// Create Scan Filter
 		$scanFilter = array();
 		foreach ($fields as $index => $field) {
 			$scanFilter[$field] = array(
@@ -225,7 +224,7 @@ abstract class AwsDynamoDB
 	}
 
 	/**
-	 *
+	 * Deletes item from DB using primary value
 	 * @param array $primaryValue Primary value
 	 * @return mixed Returns deleted primary value of null
 	 */

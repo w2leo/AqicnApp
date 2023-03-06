@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		ExitPage('Passwords doesn\'t match or empty');
 	}
 
-	$db=new AwsUsersData();
+	$db = new AwsUsersData();
 	$passwordHash = password_hash($pass1, PASSWORD_DEFAULT);
 	$result = $db->ChangePassword($login, $passwordHash, $recovery_token);
 	ExitPage($result->value);

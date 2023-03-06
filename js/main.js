@@ -4,6 +4,7 @@ function getData() {
 	var xhr = new XMLHttpRequest();
 	var url = "/?main=fill";
 	xhr.open("GET", url, true);
+
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState === 4 && xhr.status === 200) {
 			var request = xhr.responseText.split("JSON_TABLE");

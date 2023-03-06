@@ -7,6 +7,4 @@ function ExitPage($message)
 	exit;
 }
 
-
-
 ?>
