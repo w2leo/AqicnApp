@@ -35,9 +35,14 @@ function ChangeCity($actionType)
 	$city = $_POST[$actionType];
 	$db = new AwsUsersData();
 	$db->GetData($_SESSION["username"]);
-	$result = $actionType == 'add_city' ? $db->AddCity($city) : $db->RemoveCity($city);
-	// $_SESSION['userData'] = $db->GetData($_SESSION["username"]);
-	ExitPage($result->value);
+	if ($actionType == 'add_city')
+	{
+		$result = $db->AddCity($city);
+		ExitPage($result->value);
+	}
+	else {
+		$db->RemoveCity($city);
+	}
 }
 
 

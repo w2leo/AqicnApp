@@ -12,6 +12,8 @@ session_start();
 // init session from config.ini file
 $_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
 $requestHandler = new RequestHandler();
+if (!isset($_GET) && !isset($_POST))
+	$requestHandler->DefaultPage();
 
 //Check and validate GET and POST requests
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET)) {
@@ -25,16 +27,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST)) {
 }
 
 
-//Log to console;
-if (!empty($_SESSION['message'])) {
-	foreach ($_SESSION['message'] as $value) {
-		echo('$_Session[message] = $value' . PHP_EOL);
-	}
-	unset($_SESSION['message']);
-}
+// //Log to console;
+// if (!empty($_SESSION['message'])) {
+// 	foreach ($_SESSION['message'] as $value) {
+// 		echo('$_Session[message] = $value' . PHP_EOL);
+// 	}
+// 	unset($_SESSION['message']);
+// }
 
-if (!isset($_GET) && !isset($_POST))
-	$requestHandler->DefaultPage();
+
 
 
 ?>

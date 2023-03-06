@@ -32,6 +32,9 @@
 			href="../vendor/datatables/dataTables.bootstrap4.min.css"
 			rel="stylesheet"
 		/>
+
+		<link rel="stylesheet" href="../css/style.css">
+
 	</head>
 
 	<body id="page-top">
@@ -124,8 +127,8 @@
 									aria-expanded="false"
 								>
 									<span class="mr-2 d-none d-lg-inline text-gray-600 small"
-										><?php if(isset($_SESSION['username'])) echo $_SESSION['username'];   ?> </span
-									>
+										><?php if(isset($_SESSION['username'])) echo $_SESSION['username'];   ?>
+									</span>
 									<img
 										class="img-profile rounded-circle"
 										src="../img/undraw_profile.svg"
@@ -158,12 +161,16 @@
 						<!-- Page Heading -->
 						<h1 class="h3 mb-2 text-gray-800">Air pollution data</h1>
 						<p class="mb-4">
-							Add, delete cities to get air pullution Information. Every morning
-							you will get an email with air pollution information fo selected
-							cities
+							Add or delete cities and get air pullution Information.
 						</p>
+
+						<div id="loader"></div>
+
 						<!-- DataTales Example -->
-						<div class="card shadow mb-4">
+						<div
+							class="card shadow mb-4 animate-bottom"
+							id="hiddenDiv"
+						>
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary">Cities list</h6>
 							</div>
@@ -252,73 +259,8 @@
 			</div>
 		</div>
 
-		<script>
-			function getData() {
-				console.log("Table fill started");
-				var xhr = new XMLHttpRequest();
-				var url = "/?main=fill";
-				xhr.open("GET", url, true);
-				xhr.onreadystatechange = function () {
-					if (xhr.readyState === 4 && xhr.status === 200) {
-						var request = xhr.responseText.split("JSON_TABLE");
-						var json = request[1];
-						var data = JSON.parse(json);
-						var tableBody = document
-							.getElementById("airTable")
-							.getElementsByTagName("tbody")[0];
-						tableBody.innerHTML = "";
-
-						for (var i = 0; i < data.length; i++) {
-							var item = data[i];
-							var row = tableBody.insertRow();
-							row.insertCell(0).innerHTML = item.city;
-							row.insertCell(1).innerHTML = item.airData;
-							row.insertCell(2).innerHTML =
-								'<a href="#" class="delete-city">delete</button>';
-						}
-					}
-				};
-				xhr.send();
-			}
-		</script>
-
-		<script>
-			// window.onload = function () {
-			// 	getData();
-			// };
-			window.onpageshow = function () {
-				getData();
-			}
-		</script>
-
-		<!-- Delete city script -->
-		<script>
-			document.body.addEventListener("click", function (event) {
-				if (event.target.classList.contains("delete-city")) {
-					event.preventDefault();
-
-					var keyFieldValue =
-						event.target.parentNode.parentNode.querySelector(
-							"td:first-child"
-						).textContent;
-
-					var formData = new FormData();
-					formData.append("remove_city", keyFieldValue);
-
-					fetch("/", {
-						method: "POST",
-						body: formData
-					}).then(function (response) {
-						if (response.status === 200) {
-							console.log("Request successful");
-							getData();
-						} else {
-							console.error("Request failed");
-						}
-					});
-				}
-			});
-		</script>
+		<!-- user defined scripts  -->
+		<script src="../js/main.js"></script>
 
 		<!-- Bootstrap core JavaScript-->
 		<script src="../vendor/jquery/jquery.min.js"></script>

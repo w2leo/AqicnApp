@@ -60,7 +60,7 @@
 														echo $value . ' ';
 													}
 												unset($_SESSION['message']);
-												?></a>
+												?>
 										</div>
 										<hr>
 									</form>
