@@ -50,7 +50,7 @@
 											value="Reset Password" />
 										<hr />
 									</form>
-									<form class="user" action="/" method="get">
+									<form class="user" href="" method="get">
 										<div class="text-center">
 											<button class="btn btn-user btn-primary btn-block" type="submit">
 												Back to login page
