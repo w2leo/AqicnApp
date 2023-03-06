@@ -1,7 +1,7 @@
 <?php
 // error_reporting(E_ERROR | E_PARSE);
-error_reporting(E_ALL);
-ini_set('display_errors', true);
+// error_reporting(E_ALL);
+// ini_set('display_errors', true);
 
 require_once('db/Validation.php');
 require_once('handlers/RequestHandler.php');
