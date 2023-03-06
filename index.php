@@ -17,15 +17,19 @@ $requestHandler = new RequestHandler();
 if (!isset($_GET) && !isset($_POST))
 	$requestHandler->DefaultPage();
 
-//Check and validate GET and POST requests
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET)) {
-	Validation::ValidateArray($_GET);
-	$requestHandler->HandleGET(array_keys($_GET));
-}
+try {
+	//Check and validate GET and POST requests
+	if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET)) {
+		Validation::ValidateArray($_GET);
+		$requestHandler->HandleGET(array_keys($_GET));
+	}
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST)) {
-	Validation::ValidateArray($_POST);
-	$requestHandler->HandlePOST(array_keys($_POST));
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST)) {
+		Validation::ValidateArray($_POST);
+		$requestHandler->HandlePOST(array_keys($_POST));
+	}
+} catch (Exception $e) {
+	ExitPage('');
 }
 
 
