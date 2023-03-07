@@ -48,3 +48,31 @@
 #hiddenDiv {
   display: none;
 }
+
+.table-green {
+	color: #f3f3f3;
+	background-color: #47e423d1;
+}
+
+.table-yellow {
+	background-color: #fff200dd;
+}
+
+.table-orange {
+	background-color: #fa8407bd;
+}
+
+.table-red {
+	color: #f3f3f3;
+	background-color: #f32f0cb4;
+}
+
+.table-violet {
+	color: #f3f3f3;
+	background-color: #bd00f7ab;
+}
+
+.table-brown {
+	color: #f3f3f3;
+	background-color: #a86c2bd0;
+}

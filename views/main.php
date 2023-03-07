@@ -115,7 +115,7 @@
 						</div>
 						<div class="card-body">
 							<div class="table-responsive">
-								<table class="table table-bordered" width="100%" cellspacing="0" id="airTable">
+								<table class="table table-bordered text-center" width="100%" cellspacing="0" id="airTable">
 									<thead>
 										<tr>
 											<th>City</th>

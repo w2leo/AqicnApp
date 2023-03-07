@@ -19,7 +19,14 @@ function getData() {
 				var item = data[i];
 				var row = tableBody.insertRow();
 				row.insertCell(0).innerHTML = item.city;
-				row.insertCell(1).innerHTML = item.airData;
+				var tableClass = SetTableClass(parseInt(item.airData));
+				row.insertCell(1).innerHTML =
+					'<div class="rounded-pill ' +
+					tableClass +
+					'">' +
+					item.airData +
+					"</button>";
+				// <div class="rounded-pill table-brown">10</div>
 				row.insertCell(2).innerHTML =
 					'<a href="#" class="delete-city">delete</button>';
 			}
@@ -27,6 +34,23 @@ function getData() {
 		}
 	};
 	xhr.send();
+}
+
+function SetTableClass(value) {
+	switch (true) {
+		case value < 51:
+			return "table-green";
+		case value < 101:
+			return "table-yellow";
+		case value < 151:
+			return "table-orange";
+		case value < 201:
+			return "table-red";
+		case value < 301:
+			return "table-violet";
+		default:
+			return "table-b";
+	}
 }
 
 window.onpageshow = function () {
