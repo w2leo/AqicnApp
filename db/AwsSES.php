@@ -15,7 +15,11 @@ class AwsSES
 		$this->SesClient = new SesClient([
 			'version' => 'latest',
 			'region' => 'us-east-1',
-			'profile' => 'default'
+			'profile' => 'default',
+			'credentials' => [
+				'key' => 'AKIASIUJXHEWVELUOBE5',
+				'secret' => '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'
+			]
 		]);
 		$this->sender_email = 'robot@rfbuild.ru';
 	}
