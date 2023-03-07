@@ -12,13 +12,16 @@ class AwsSES
 
 	public function __construct()
 	{
-		$credentials = parse_ini_file($_SESSION['config']['vendor_dir'] . "/aws.ini", true)['default'];
+	//	$credentials = parse_ini_file($_SESSION['config']['vendor_dir'] . "/aws.ini", true)['default'];
 
 		$this->SesClient = new SesClient([
 			'version' => 'latest',
 			'region' => 'us-east-1',
 			'profile' => 'default',
-			'credentials' => $credentials
+			'credentials' => [
+				'key' => 'AKIASIUJXHEW52Q7LMGN',
+				'secret' => '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'
+			]
 		]);
 		$this->sender_email = 'robot@rfbuild.ru';
 	}

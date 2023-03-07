@@ -38,13 +38,16 @@ final class AwsUsersData extends AwsDynamoDB
 	 */
 	public function __construct()
 	{
-		$credentials = parse_ini_file($_SESSION['config']['vendor_dir'] . "/aws.ini", true)['default'];
+		//$credentials = parse_ini_file($_SESSION['config']['vendor_dir'] . "/aws.ini", true)['default'];
 
 		$this->connectionData = array(
 			'region' => 'us-east-1',
 			'version' => 'latest',
 			'profile' => 'default',
-			'credentials' => $credentials
+			'credentials' => [
+				'key' => 'AKIASIUJXHEW52Q7LMGN',
+				'secret' => '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'
+			]
 		);
 		$this->primaryField = 'Login';
 		$this->tableName = 'UsersData';
