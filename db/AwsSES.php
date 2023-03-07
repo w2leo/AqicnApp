@@ -14,7 +14,8 @@ class AwsSES
 	{
 		$this->SesClient = new SesClient([
 			'version' => 'latest',
-			'region' => 'us-east-1'
+			'region' => 'us-east-1',
+			'profile' => 'default'
 		]);
 		$this->sender_email = 'robot@rfbuild.ru';
 	}
