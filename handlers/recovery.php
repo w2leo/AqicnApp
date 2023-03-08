@@ -25,7 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$msg .= "<p>If you try to recover your password, click on <a href=\"http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}?login=";
 			$msg .= $login . "&recovery_token=" . $recovery_token . "\">link</a> to set new password </p>";
 			$mail = new AwsSES();
-			$mail->SendEmail($email, $msg);
+			try {
+				$mail->SendEmail($email, $msg);
+			} catch (Error $e) {
+				echo '';
+			}
 		}
 	}
 

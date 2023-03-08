@@ -39,6 +39,10 @@ $_SESSION['config']['vendor_dir'] = '/var/www';
 	$db2 = new AwsUsersData();
 	echo 'Check:'.$db2->CheckUserExists('qwe')->value;
 
+	$login = 'u'.rand(0,1000);
+	$db2->AddUser($login,'passhash',$login.'@rfbuild.ru','confToken');
+
+
 	require_once('db/AwsSES.php');
 	try {
 	$ses = new AwsSES();

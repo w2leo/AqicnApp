@@ -44,8 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$msg .= "<p>Click on  <a href=\"http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}?login=" . $login;
 		$msg .= "&confirmation_token=" . $confirmationToken . "\">link</a> to confirm email</p>";
 		$mail = new AwsSES();
-		$mail->SendEmail($email, $msg);
-	}
+		try {
+			$mail->SendEmail($email, $msg);
+		} catch (Error $e) {
+			echo '';
+		}	}
 	ExitPage($result->value);
 }
 
