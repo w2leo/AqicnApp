@@ -19,8 +19,8 @@ class AwsSES
 			'region' => 'us-east-1',
 			'profile' => 'default',
 			'credentials' => [
-				'key' => 'AKIASIUJXHEW52Q7LMGN',
-				'secret' => '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'
+				'key' => 'AKIASIUJXHEWU6CEJJHU',
+				'secret' => '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'
 			]
 		]);
 		$this->sender_email = 'robot@rfbuild.ru';

@@ -45,8 +45,8 @@ final class AwsUsersData extends AwsDynamoDB
 			'version' => 'latest',
 			'profile' => 'default',
 			'credentials' => [
-				'key' => 'AKIASIUJXHEW52Q7LMGN',
-				'secret' => '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'
+				'key' => 'AKIASIUJXHEWU6CEJJHU',
+				'secret' => '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'
 			]
 		);
 		$this->primaryField = 'Login';
