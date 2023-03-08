@@ -12,6 +12,11 @@ ob_start();
 
 session_start();
 
+foreach ($_SESSION['message'] as $key => $item) {
+	echo '<p class="text-danger">message #'.$key.': '.$item.'</p>';
+}
+$_SESSION['message'] = [];
+
 // init session from config.ini file
 $_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
 
@@ -32,6 +37,7 @@ try {
 		$requestHandler->HandlePOST(array_keys($_POST));
 	}
 } catch (Error $e) {
+
 	ExitPage('');
 }
 
