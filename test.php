@@ -26,19 +26,10 @@ foreach ($result['TableNames'] as $tableName) {
     echo $tableName . "\n";
 }
 
-
-echo 'AWS';
-$result = $aws->listTables();
-
-// TableNames contains an array of table names
-foreach ($result['TableNames'] as $tableName) {
-    echo $tableName . "\n";
-}
-
 // init session from config.ini file
 // $_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
 
-$_SESSION['confi'] = '/var/www';
+$_SESSION['config'] = '/var/www';
 //try {
 //	require_once('db/Validation.php');
 //	require_once('handlers/RequestHandler.php');
@@ -46,7 +37,7 @@ $_SESSION['confi'] = '/var/www';
 	require_once('db/AwsUsersData.php');
 
 	$db2 = new AwsUsersData();
-	echo 'Check:' = $db2->CheckUserExists('qwe')->value;
+	echo 'Check:'.$db2->CheckUserExists('qwe')->value;
 
 
 //} catch (Error $e) {
