@@ -11,18 +11,12 @@ session_start();
 require_once '/var/www/vendor/autoload.php';
 use Aws\DynamoDb\DynamoDbClient;
 
+
 $client = DynamoDbClient::factory(array(
     'profile' => 'default',
-    'region'  => 'us-east-1'
+    'region'  => 'us-east-1',
+	'version' => '2012-08-10'
 ));
-
-use Aws\Common\Aws;
-
-// Create a service builder using a configuration file
-$aws = Aws::factory('/path/to/my_config.json');
-
-// Get the client from the builder by namespace
-$client = $aws->get('DynamoDb');
 
 echo 'DynamoDB';
 $result = $client->listTables();
@@ -31,6 +25,7 @@ $result = $client->listTables();
 foreach ($result['TableNames'] as $tableName) {
     echo $tableName . "\n";
 }
+
 
 echo 'AWS';
 $result = $aws->listTables();
@@ -43,13 +38,18 @@ foreach ($result['TableNames'] as $tableName) {
 // init session from config.ini file
 // $_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
 
+$_SESSION['confi'] = '/var/www';
+//try {
+//	require_once('db/Validation.php');
+//	require_once('handlers/RequestHandler.php');
+//	require_once('db/AwsSES.php');
+	require_once('db/AwsUsersData.php');
 
-// try {
-// 	require_once('db/Validation.php');
-// 	require_once('handlers/RequestHandler.php');
-// 	require_once('db/AwsSES.php');
-// 	require_once('db/AwsUsersData.php');
-// } catch (Error $e) {
+	$db2 = new AwsUsersData();
+	echo 'Check:' = $db2->CheckUserExists('qwe')->value;
+
+
+//} catch (Error $e) {
 // 	echo 'Error include file';
 // }
 // try {

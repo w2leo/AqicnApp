@@ -44,7 +44,8 @@ final class AwsUsersData extends AwsDynamoDB
 			'region' => 'us-east-1',
 			'version' => 'latest',
 			'profile' => 'default',
-			'credentials' => $credentials
+			'version' => '2012-08-10'
+			//'credentials' => $credentials
 		);
 		$this->primaryField = 'Login';
 		$this->tableName = 'UsersData';
