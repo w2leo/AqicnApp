@@ -29,7 +29,7 @@ foreach ($result['TableNames'] as $tableName) {
 // init session from config.ini file
 // $_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
 
-$_SESSION['config'] = '/var/www';
+$_SESSION['config']['vendor_dir'] = '/var/www';
 //try {
 //	require_once('db/Validation.php');
 //	require_once('handlers/RequestHandler.php');
