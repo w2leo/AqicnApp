@@ -48,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$mail->SendEmail($email, $msg);
 		} catch (Error $e) {
 			echo '';
-		}	}
+		}
+	}
 	ExitPage($result->value);
 }
 

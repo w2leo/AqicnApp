@@ -1,8 +1,8 @@
 <?php
 
-ini_set ('display_errors', 1);
-ini_set ('display_startup_errors', 1);
-error_reporting (E_ALL);
+// ini_set ('display_errors', 1);
+// ini_set ('display_startup_errors', 1);
+// error_reporting (E_ALL);
 
 require_once('db/Validation.php');
 require_once('handlers/RequestHandler.php');
@@ -12,13 +12,10 @@ ob_start();
 
 session_start();
 
-foreach ($_SESSION['message'] as $key => $item) {
-	echo '<p class="text-danger">message #'.$key.': '.$item.'</p>';
-}
-$_SESSION['message'] = [];
-
 // init session from config.ini file
-$_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
+if (!isset($_SESSION['config'])) {
+	$_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
+}
 
 // create RequestHandler object for handle GET and POST requests
 $requestHandler = new RequestHandler();
@@ -37,8 +34,6 @@ try {
 		$requestHandler->HandlePOST(array_keys($_POST));
 	}
 } catch (Error $e) {
-
-	$_SESSION['message'][]=$e;
 	ExitPage('');
 }
 
