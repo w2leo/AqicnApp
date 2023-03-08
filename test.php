@@ -10,17 +10,31 @@ ob_start();
 session_start();
 require_once '/var/www/vendor/autoload.php';
 use Aws\DynamoDb\DynamoDbClient;
+use Aws\Credentials\CredentialProvider;
+use Aws\S3\S3Client;
+
+// Use the default credential provider
+$provider = CredentialProvider::defaultProvider();
+
+// Pass the provider to the client
+$client = new S3Client([
+    'region'      => 'us-west-2',
+    'version'     => '2006-03-01',
+    'credentials' => $provider
+]);
 
 
 $client = DynamoDbClient::factory(array(
     'profile' => 'default',
     'region'  => 'us-east-1',
-	'version' => '2012-08-10'
+	'version' => '2012-08-10',
+    'credentials' => $provider
 ));
 
 echo 'DynamoDB';
 $result = $client->listTables();
 
+echo 'TABLES';
 // TableNames contains an array of table names
 foreach ($result['TableNames'] as $tableName) {
     echo $tableName . "\n";
