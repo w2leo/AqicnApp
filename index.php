@@ -38,6 +38,7 @@ try {
 	}
 } catch (Error $e) {
 
+	$_SESSION['message'][]=$e;
 	ExitPage('');
 }
 
