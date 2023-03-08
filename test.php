@@ -1,8 +1,8 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 
 //enable input bufferization
 ob_start();
@@ -39,8 +39,13 @@ $_SESSION['config']['vendor_dir'] = '/var/www';
 	$db2 = new AwsUsersData();
 	echo 'Check:'.$db2->CheckUserExists('qwe')->value;
 
-	require_once('db/AwsUsersData.php');
+	require_once('db/AwsSES.php');
+	try {
 	$ses = new AwsSES();
+	} catch (Error $e)
+	{
+		echo 'some SES error';
+	}
 	echo 'Mail:'.$ses->SendEmail('mm@rfbuild.ru', 'test message 1');
 
 //} catch (Error $e) {
