@@ -18,7 +18,8 @@ class AwsSES
 			'version' => 'latest',
 			'region' => 'us-east-1',
 			'profile' => 'default',
-			'credentials' => $credentials
+			'version' => '2012-08-10'
+//			'credentials' => $credentials
 		]);
 		$this->sender_email = 'robot@rfbuild.ru';
 	}

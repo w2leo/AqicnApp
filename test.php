@@ -39,6 +39,9 @@ $_SESSION['config']['vendor_dir'] = '/var/www';
 	$db2 = new AwsUsersData();
 	echo 'Check:'.$db2->CheckUserExists('qwe')->value;
 
+	require_once('db/AwsUsersData.php');
+	$ses = new AwsSES();
+	echo 'Mail:'.$ses->SendEmail('mm@rfbuild.ru', 'test message 1');
 
 //} catch (Error $e) {
 // 	echo 'Error include file';
