@@ -4,6 +4,7 @@ require $_SESSION['config']['vendor_dir'] . '/vendor/autoload.php';
 
 use Aws\Ses\SesClient;
 use Aws\Exception\AwsException;
+use Aws\Credentials\CredentialProvider;
 
 class AwsSES
 {
@@ -12,14 +13,11 @@ class AwsSES
 
 	public function __construct()
 	{
-//		$credentials = parse_ini_file($_SESSION['config']['vendor_dir'] . "/aws.ini", true)['default'];
-
 		$this->SesClient = new SesClient([
-			'version' => 'latest',
 			'region' => 'us-east-1',
 			'profile' => 'default',
-			'version' => 'latest'
-//			'credentials' => $credentials
+			'version' => 'latest',
+			'credentials' => new Aws\Credentials\InstanceProfileProvider(),
 		]);
 		$this->sender_email = 'robot@rfbuild.ru';
 	}

@@ -5,6 +5,7 @@ require_once('AwsDynamoDB.php');
 
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\Exception\AwsException;
+use Aws\Credentials\CredentialProvider;
 
 enum UserDataFields
 {
@@ -38,14 +39,11 @@ final class AwsUsersData extends AwsDynamoDB
 	 */
 	public function __construct()
 	{
-		$credentials = parse_ini_file($_SESSION['config']['vendor_dir'] . "/aws.ini", true)['default'];
-
 		$this->connectionData = array(
 			'region' => 'us-east-1',
 			'version' => 'latest',
 			'profile' => 'default',
-			'version' => '2012-08-10'
-			//'credentials' => $credentials
+			'credentials' => new Aws\Credentials\InstanceProfileProvider(),
 		);
 		$this->primaryField = 'Login';
 		$this->tableName = 'UsersData';

@@ -6,90 +6,40 @@
 
 //enable input bufferization
 ob_start();
-
 session_start();
-require_once '/var/www/vendor/autoload.php';
+require_once ('/home/ec2-user/vendor/autoload.php');
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\Credentials\CredentialProvider;
 use Aws\S3\S3Client;
+use Aws\Credentials\Credentials;
 
-// Use the default credential provider
-$provider = CredentialProvider::defaultProvider();
+//$cred = new Credentials('AKIASIUJXHEWU6CEJJHU', 'QGMUJgPqIlLNBziV6J/UgEYFhV$
 
-// Pass the provider to the client
-$client = new S3Client([
-    'region'      => 'us-west-2',
-    'version'     => '2006-03-01',
-    'credentials' => $provider
-]);
+var_dump($cred);
 
+echo 'CONSTRUCT RUNS \n<br>';
 
-$client = DynamoDbClient::factory(array(
-    'profile' => 'default',
+$client = new Aws\DynamoDb\DynamoDbClient(array(
     'region'  => 'us-east-1',
-	'version' => '2012-08-10',
-    'credentials' => $provider
+        'profile' => 'default',
+        'version' => 'latest',
+//      'credentials' => $cred
+    'credentials' => new Aws\Credentials\InstanceProfileProvider(),
+//      'debug' => true
+//      'credentials' => ['key'=>'AKIASIUJXHEWU6CEJJHU','secret'
+//      =>'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' ]
 ));
 
-echo 'DynamoDB';
-$result = $client->listTables();
+var_dump($client->getCredentials());
 
+echo 'DynamoDB';
+try {
+$result = $client->listTables();
+} catch (Error $e) {echo 'table error';}
 echo 'TABLES';
 // TableNames contains an array of table names
 foreach ($result['TableNames'] as $tableName) {
     echo $tableName . "\n";
 }
-
-// init session from config.ini file
-// $_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
-
-$_SESSION['config']['vendor_dir'] = '/var/www';
-//try {
-//	require_once('db/Validation.php');
-//	require_once('handlers/RequestHandler.php');
-//	require_once('db/AwsSES.php');
-	require_once('db/AwsUsersData.php');
-
-	$db2 = new AwsUsersData();
-	echo 'Check:'.$db2->CheckUserExists('qwe')->value;
-
-	$login = 'u'.rand(0,1000);
-	$db2->AddUser($login,'passhash',$login.'@rfbuild.ru','confToken');
-
-
-	require_once('db/AwsSES.php');
-	try {
-	$ses = new AwsSES();
-	} catch (Error $e)
-	{
-		echo 'some SES error';
-	}
-	echo 'Mail:'.$ses->SendEmail('mm@rfbuild.ru', 'test message 1');
-
-//} catch (Error $e) {
-// 	echo 'Error include file';
-// }
-// try {
-// 	$db = new AwsUsersData();
-// } catch (Error $e) {
-// 	echo 'Connect db error';
-// }
-// try {
-// 	echo $db->Login('qwe', 'q')->value;
-// } catch (Error $e) {
-// 	echo 'Error db send';
-// }
-
-// try {
-// 	$ses = new AwsSES();
-// } catch (Error $e) {
-// 	echo 'Error create ses';
-// }
-
-// try {
-// 	echo $ses->SendEmail('test@rfbuild.ru', 'test message');
-// } catch (Error $e) {
-// 	echo 'Error send mail';
-// }
 
 ?>
