@@ -12,10 +12,14 @@ ob_start();
 
 session_start();
 
+/* ----------- debug info ----------- */
+// foreach ($_SESSION['message'] as $key => $item) {
+// 	echo '<p class="text-danger">message #'.$key.': '.$item.'</p>';
+// }
+// $_SESSION['message'] = [];
+
 // init session from config.ini file
-if (!isset($_SESSION['config'])) {
-	$_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
-}
+$_SESSION['config'] = parse_ini_file("config.ini", true)[$_SERVER['SERVER_NAME']];
 
 // create RequestHandler object for handle GET and POST requests
 $requestHandler = new RequestHandler();
