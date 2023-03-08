@@ -2,7 +2,6 @@
 
 class Validation
 {
-
 	static function Validate($data)
 	{
 		$data = trim($data);

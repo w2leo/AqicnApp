@@ -10,7 +10,7 @@ $password2 = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-	$login = Validation::CheckInput($_POST['login'] ?? '') ? $_POST['login']: '';
+	$login = Validation::CheckInput($_POST['login'] ?? '') ? $_POST['login'] : '';
 	$password = Validation::CheckInput($_POST['password'] ?? '') ? $_POST['password'] : '';
 
 	$_SESSION['message'] = [];
@@ -31,4 +31,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	ExitPage($result->value);
 }
- ?>
+
+?>

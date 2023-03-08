@@ -26,7 +26,7 @@ function getData() {
 					'">' +
 					item.airData +
 					"</button>";
-				// <div class="rounded-pill table-brown">10</div>
+				// <div class="rounded-pill table-brown">NNN</div>
 				row.insertCell(2).innerHTML =
 					'<a href="#" class="delete-city">delete</button>';
 			}
@@ -59,7 +59,6 @@ window.onpageshow = function () {
 
 // Delete city script
 document.body.addEventListener("click", function (event) {
-	debugger;
 	if (event.target.classList.contains("delete-city")) {
 		event.preventDefault();
 

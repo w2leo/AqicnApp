@@ -49,7 +49,7 @@ abstract class AwsDynamoDB
 			return $this->GetStatusCode($result) == 200;
 		} catch (AwsException $e) {
 			return $e->getStatusCode();
-		} catch (Error $e){
+		} catch (Error $e) {
 			return 200;
 		}
 	}
