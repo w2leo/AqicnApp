@@ -48,7 +48,7 @@ function SetTableClass(value) {
 			return "table-red";
 		case value < 301:
 			return "table-violet";
-		default:
+		case value > 300:
 			return "table-brown";
 	}
 }
